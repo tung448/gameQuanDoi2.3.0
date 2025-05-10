@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SerArmy2_2021">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/SerArmy2_2021.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
