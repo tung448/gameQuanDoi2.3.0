@@ -175,6 +175,13 @@ public class User {
             } else {
                 this.xu += xuUp;
             }
+            try {
+                SQLManager.getStatement().executeUpdate(
+                        "UPDATE `armymem` SET `xu`='" + this.xu + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return;
+            }
             // Send update Xu
             Message ms = new Message(105);
             DataOutputStream ds = ms.writer();
@@ -2779,7 +2786,8 @@ public class User {
                 boolean found = false;
                 if (jSize > 0) {
                     for (int i = 0; i < jSize; i++) {
-                        int iddb1 = ((Long) jarr.get(i)).intValue();
+                        Number num = (Number) jarr.get(i);
+                        int iddb1 = num.intValue();
                         if (iddb1 == ids) {
                             found = true;
                             break;
@@ -2819,7 +2827,8 @@ public class User {
             JSONArray jarr = this.friends;
             int index = -1;
             for (int i = 0; i < jarr.size(); i++) {
-                int iddb1 = ((Long) jarr.get(i)).intValue();
+                Number num = (Number) jarr.get(i);
+                int iddb1 = num.intValue();
                 if (iddb1 == iddb) {
                     index = i;
                     break;
