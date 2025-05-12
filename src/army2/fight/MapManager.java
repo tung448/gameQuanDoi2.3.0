@@ -73,9 +73,11 @@ public class MapManager {
             MapEntry me;
             if (MapData.existsMapBrick(brickId)) {
                 MapData.MapBrickEntry mB = MapData.getMapBrickEntry(brickId);
-                me = new MapEntry(brickId, Until.getShort(ab, off + 1), Until.getShort(ab, off + 3), mB.dat, (short) mB.Width, (short) mB.Height, !MapData.isNotColision(brickId));
+                me = new MapEntry(brickId, Until.getShort(ab, off + 1), Until.getShort(ab, off + 3), mB.dat,
+                        (short) mB.Width, (short) mB.Height, !MapData.isNotColision(brickId));
             } else {
-                me = new MapEntry(brickId, Until.getShort(ab, off + 1), Until.getShort(ab, off + 3), null, (short) 0, (short) 0, !MapData.isNotColision(brickId));
+                me = new MapEntry(brickId, Until.getShort(ab, off + 1), Until.getShort(ab, off + 3), null, (short) 0,
+                        (short) 0, !MapData.isNotColision(brickId));
             }
             entrys.add(me);
             off += 5;
@@ -114,8 +116,8 @@ public class MapManager {
                 pl.collision(X, Y, bull);
             }
         }
-        for (int i = 0; i < fm.bullMNG.boms.size(); i++) {
-            BulletManager.BomHenGio bom = fm.bullMNG.boms.get(i);
+        for (int i = 0; i < fm.bulletManager.boms.size(); i++) {
+            BulletManager.BomHenGio bom = fm.bulletManager.boms.get(i);
             while (!fm.mapMNG.isCollision((short) bom.X, (short) bom.Y)) {
                 bom.Y++;
                 for (int j = 0; j < 14; j++) {
@@ -124,7 +126,7 @@ public class MapManager {
                     }
                 }
                 if (bom.Y > fm.mapMNG.Height) {
-                    fm.bullMNG.removeBom(i);
+                    fm.bulletManager.removeBom(i);
                     break;
                 }
             }

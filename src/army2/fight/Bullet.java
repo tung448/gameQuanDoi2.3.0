@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Bullet {
 
     protected FightManager fm;
-    protected BulletManager bullMNG;
+    protected BulletManager bulletManager;
     protected boolean collect;
     protected byte bullId;
     protected int satThuong;
@@ -102,7 +102,7 @@ public class Bullet {
             case 35:// '0'
                 return 3;
 
-            case 40://1
+            case 40:// 1
             case 41:
                 return 2;
             case 42: // '*'
@@ -135,7 +135,7 @@ public class Bullet {
     public static int getTamAHByBullID(int bullId) {
         switch (bullId) {
 
-            //guner
+            // guner
             case 0:
                 return 21;
 
@@ -291,9 +291,10 @@ public class Bullet {
         return bullId == 17 || bullId == 19;
     }
 
-    public Bullet(BulletManager bullMNG, byte bullId, int satThuong, Player pl, int X, int Y, int vx, int vy, int msg, int g100) {
-        this.fm = bullMNG.fm;
-        this.bullMNG = bullMNG;
+    public Bullet(BulletManager bulletManager, byte bullId, int satThuong, Player pl, int X, int Y, int vx, int vy,
+            int msg, int g100) {
+        this.fm = bulletManager.fm;
+        this.bulletManager = bulletManager;
         this.bullId = bullId;
         this.satThuong = (satThuong * pl.satThuong) / 100;
         this.pl = pl;
@@ -303,8 +304,8 @@ public class Bullet {
         this.lastY = (short) Y;
         this.vx = (short) vx;
         this.vy = (short) vy;
-        this.ax100 = (short) (bullMNG.fm.WindX * msg / 100);
-        this.ay100 = (short) (bullMNG.fm.WindY * msg / 100);
+        this.ax100 = (short) (bulletManager.fm.WindX * msg / 100);
+        this.ay100 = (short) (bulletManager.fm.WindY * msg / 100);
         this.g100 = (short) g100;
         this.vxTemp = 0;
         this.vyTemp = 0;
@@ -339,7 +340,7 @@ public class Bullet {
         lastX = X;
         Y += vy;
         lastY = Y;
-        short[] XYVC = bullMNG.getCollisionPoint(preX, preY, X, Y, isXuyenPlayer, isXuyenMap);
+        short[] XYVC = bulletManager.getCollisionPoint(preX, preY, X, Y, isXuyenPlayer, isXuyenMap);
         if (XYVC != null) {
             collect = true;
             X = XYVC[0];
@@ -391,8 +392,8 @@ public class Bullet {
             XmaxY = X;
             maxY = Y;
         }
-        if (this.bullMNG.hasVoiRong) {
-            for (BulletManager.VoiRong vr : this.bullMNG.voiRongs) {
+        if (this.bulletManager.hasVoiRong) {
+            for (BulletManager.VoiRong vr : this.bulletManager.voiRongs) {
                 if (this.X >= vr.X - 5 && this.X <= vr.X + 10) {
                     this.vx -= 2;
                     this.vy -= 2;

@@ -7,11 +7,11 @@ package army2.server;
 public class SerArmy {
 
     public static void main(String args[]) {
-        System.out.println("Start server!");
+        ServerManager.log("Start server!");
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Shutdown Server!");
+                ServerManager.log("Shutdown Server!");
                 ServerManager.stop();
             }
         }));

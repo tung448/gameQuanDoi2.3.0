@@ -2,6 +2,15 @@ package army2.server;
 
 import army2.fight.FightManager;
 import army2.fight.FightWait;
+import army2.server.FomularData.FomularDataEntry;
+import army2.server.FomularData.FomularEntry;
+import army2.server.ItemData.ItemEntry;
+import army2.server.MissionData.MissDataEntry;
+import army2.server.MissionData.MissionEntry;
+import army2.server.NVData.EquipmentEntry;
+import army2.server.NVData.NVEntry;
+import army2.server.SpecialItemData.SpecialItemEntry;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,7 +32,6 @@ import static army2.server.MissionData.MissDataEntry;
 import static army2.server.MissionData.MissionEntry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public class User {
 
@@ -104,7 +112,9 @@ public class User {
     protected FightManager luyentap;
     protected FightManager fight;
     protected static EquipmentEntry[][] nvEquipDefault;
-    private final short[][] GIFT_DATA = {{54, 52, 53, 55, 56}, {51, 49, 50, 53, 52}, {51, 49, 50, 53, 52}, {52, 50, 51, 54, 53}, {51, 49, 50, 53, 52}, {50, 48, 49, 52, 51}, {51, 49, 50, 53, 52}, {52, 54, 53, 50, 51}, {51, 53, 52, 49, 50}, {51, 53, 52, 49, 50}};
+    private final short[][] GIFT_DATA = { { 54, 52, 53, 55, 56 }, { 51, 49, 50, 53, 52 }, { 51, 49, 50, 53, 52 },
+            { 52, 50, 51, 54, 53 }, { 51, 49, 50, 53, 52 }, { 50, 48, 49, 52, 51 }, { 51, 49, 50, 53, 52 },
+            { 52, 54, 53, 50, 51 }, { 51, 53, 52, 49, 50 }, { 51, 53, 52, 49, 50 } };
 
     public User(ClientEntry client) {
         this.client = client;
@@ -268,7 +278,7 @@ public class User {
                 if (canX2 && this.xpX2Time.after(new Date())) {
                     addXP *= 2;
                 }
-                //x0 xp
+                // x0 xp
                 if (this.xpX0Time.after(new Date())) {
                     return;
                 }
@@ -390,7 +400,8 @@ public class User {
         }
         ability[0] = 1000 + this.pointAdd[nv][0] * 10 + envAdd[0] * 10;
         ability[0] += (1000 + this.pointAdd[nv][0]) * percenAdd[0] / 100;
-        ability[1] = (NVData.entrys.get(nv).sat_thuong * (100 + (envAdd[1] + this.pointAdd[nv][1]) / 3 + percenAdd[1]) / 100) * 100 / NVData.entrys.get(nv).sat_thuong;
+        ability[1] = (NVData.entrys.get(nv).sat_thuong * (100 + (envAdd[1] + this.pointAdd[nv][1]) / 3 + percenAdd[1])
+                / 100) * 100 / NVData.entrys.get(nv).sat_thuong;
         ability[2] = (envAdd[2] + this.pointAdd[nv][2]) * 10;
         ability[2] += ability[2] * percenAdd[2] / 100;
         ability[3] = (envAdd[3] + this.pointAdd[nv][3]) * 10;
@@ -531,7 +542,7 @@ public class User {
             ruongDoItemEntry rdiE = this.ruongDoItem.get(i);
             // Id
             ds.writeByte(rdiE.entry.id);
-            // Numb 
+            // Numb
             ds.writeShort(rdiE.numb);
             // Name
             ds.writeUTF(rdiE.entry.name);
@@ -576,9 +587,10 @@ public class User {
             Message ms;
             DataOutputStream ds;
             User us = new User(cl);
-            ResultSet red = SQLManager.getStatement().executeQuery("SELECT * FROM `user` WHERE (`user`=\"" + user + "\" AND `password`=\"" + pass + "\") LIMIT 1;");
+            ResultSet red = SQLManager.getStatement().executeQuery(
+                    "SELECT * FROM `user` WHERE (`user`=\"" + user + "\" AND `password`=\"" + pass + "\") LIMIT 1;");
             if (red != null && red.first()) {
-                //  id user
+                // id user
                 us.iddb = red.getInt("user_id");
                 us.username = red.getString("user");
                 boolean lock = red.getBoolean("lock");
@@ -593,19 +605,24 @@ public class User {
                 }
                 // Get user detals
 
-                red = SQLManager.getStatement().executeQuery("SELECT * FROM `armymem` WHERE `id`=\"" + us.iddb + "\" LIMIT 1;");
-                //neu armymem ko ton tại thi tạo mới from
+                red = SQLManager.getStatement()
+                        .executeQuery("SELECT * FROM `armymem` WHERE `id`=\"" + us.iddb + "\" LIMIT 1;");
+                // neu armymem ko ton tại thi tạo mới from
                 if (!red.first()) {
-                    SQLManager.getStatement().executeUpdate("INSERT INTO armymem(`id`, `xu`, `luong`, `ruongItem`, `ruongTrangBi`) VALUES (" + us.iddb + ", 1000, 0, '[]', '[]');");
+                    SQLManager.getStatement().executeUpdate(
+                            "INSERT INTO armymem(`id`, `xu`, `luong`, `ruongItem`, `ruongTrangBi`) VALUES (" + us.iddb
+                                    + ", 1000, 0, '[]', '[]');");
                     red.close();
-                    red = SQLManager.getStatement().executeQuery("SELECT * FROM `armymem` WHERE id=\"" + us.iddb + "\" LIMIT 1;");
+                    red = SQLManager.getStatement()
+                            .executeQuery("SELECT * FROM `armymem` WHERE id=\"" + us.iddb + "\" LIMIT 1;");
                     red.first();
                 }
                 User us1 = ServerManager.getUser(us.iddb);
                 if (us1 != null) {
                     red.close();
                     us1.client.close();
-                    SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `online`=0, `idapp`=-1 WHERE `id`=" + us.iddb + " LIMIT 1;");
+                    SQLManager.getStatement().executeUpdate(
+                            "UPDATE `armymem` SET `online`=0, `idapp`=-1 WHERE `id`=" + us.iddb + " LIMIT 1;");
                     ms = new Message(4);
                     ds = ms.writer();
                     ds.writeUTF(GameString.loginErr1());
@@ -639,7 +656,7 @@ public class User {
                 // dvong
                 us.dvong = red.getInt("dvong");
                 // chuyen sinh
-//                us.csinh = red.getShort("CSinh");
+                // us.csinh = red.getShort("CSinh");
                 // nhan vat
                 ds.writeByte(us.nv = (byte) (red.getByte("NVused") - 1));
                 // clan id
@@ -647,11 +664,11 @@ public class User {
                 // x2 xp time
                 us.xpX2Time = Until.getDate(red.getString("x2XPTime"));
                 // x0 xp time
-//                us.xpX0Time = Until.getDate(red.getString("x0XPTime"));
+                // us.xpX0Time = Until.getDate(red.getString("x0XPTime"));
                 // diem sk
-//                us.eventScore = red.getInt("point_event");
+                // us.eventScore = red.getInt("point_event");
                 // bao danh
-//                us.baodanhsk = Until.getDate(red.getString("baodanhsk"));
+                // us.baodanhsk = Until.getDate(red.getString("baodanhsk"));
                 // null byte
                 ds.writeByte(0);
 
@@ -667,7 +684,7 @@ public class User {
                 us.nvEquip = new ruongDoTBEntry[len][6];
                 // nhan vat chiyen sinh
                 JSONArray jarr1 = null;
-//                JSONArray jarr1 = (JSONArray) JSONValue.parse(red.getString("nvCSinh"));
+                // JSONArray jarr1 = (JSONArray) JSONValue.parse(red.getString("nvCSinh"));
                 if (jarr1 != null) {
                     for (i = 0; i < jarr1.size(); i++) {
                         JSONObject jobj1 = (JSONObject) jarr1.get(i);
@@ -729,7 +746,8 @@ public class User {
                     /* xp % */
                     us.xp[i] = ((Long) jobj.get("xp")).intValue();
                     /* lever % */
-                    us.leverPercen[i] = (byte) ((us.xp[i] - (us.lever[i] * (us.lever[i] - 1) * 500)) / us.lever[i] / 10);
+                    us.leverPercen[i] = (byte) ((us.xp[i] - (us.lever[i] * (us.lever[i] - 1) * 500)) / us.lever[i]
+                            / 10);
                     /* point */
                     us.point[i] = ((Long) jobj.get("point")).shortValue();
                     /* pointAdd */
@@ -819,15 +837,18 @@ public class User {
                 // Neu ko online hon 1 ngay -> gui item ngay
                 if (Until.compare_Day(new Date(), newLongin)) {
                     byte idItem = (byte) (Until.nextInt(ItemData.entrys.size() - 2) + 2);
-                    int numItem = (new int[]{1, 3, 5})[Until.nextInt(new int[]{500, 300, 200})];
+                    int numItem = (new int[] { 1, 3, 5 })[Until.nextInt(new int[] { 500, 300, 200 })];
                     us.updateItem(idItem, numItem);
-                    us.sendMSSToUser(null, String.format(GameString.dailyReward(), numItem, ItemData.entrys.get(idItem).name));
+                    us.sendMSSToUser(null,
+                            String.format(GameString.dailyReward(), numItem, ItemData.entrys.get(idItem).name));
                     us.updateMission(16, 1);
-                    us.sendMSSToUser(null, "Mã quà tặng cho tài khoản mới chơi là tanthu");
+                    us.sendMSSToUser(null, "Trần Thanh Tùng ");
                 }
                 red.close();
                 // Set online
-                SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `online`=1,`newOnline`='" + Until.toDateString(new Date()) + "', `idapp`=" + cl.id + " WHERE `id`=" + us.iddb + " LIMIT 1;");
+                SQLManager.getStatement()
+                        .executeUpdate("UPDATE `armymem` SET `online`=1,`newOnline`='" + Until.toDateString(new Date())
+                                + "', `idapp`=" + cl.id + " WHERE `id`=" + us.iddb + " LIMIT 1;");
                 // Luyen tap manager
                 us.luyentap = new FightManager(us, ServerManager.ltapMap);
                 // login true -> dua vao wait
@@ -850,7 +871,8 @@ public class User {
     protected ruongDoTBEntry getEquipNoNgoc(EquipmentEntry eqE, byte level) {
         for (int i = 0; i < this.ruongDoTB.size(); i++) {
             ruongDoTBEntry rdE = this.ruongDoTB.get(i);
-            if (rdE != null && rdE.entry == eqE && !rdE.isUse && rdE.vipLevel == level && rdE.slotNull == 3 && rdE.entry.hanSD - Until.getNumDay(rdE.dayBuy, new Date()) > 0) {
+            if (rdE != null && rdE.entry == eqE && !rdE.isUse && rdE.vipLevel == level && rdE.slotNull == 3
+                    && rdE.entry.hanSD - Until.getNumDay(rdE.dayBuy, new Date()) > 0) {
                 return rdE;
             }
         }
@@ -868,7 +890,8 @@ public class User {
         return 0;
     }
 
-    public synchronized void updateRuong(ruongDoTBEntry tbUpdate, ruongDoTBEntry addTB, int removeTB, ArrayList<ruongDoItemEntry> addItem, ArrayList<ruongDoItemEntry> removeItem) throws IOException {
+    public synchronized void updateRuong(ruongDoTBEntry tbUpdate, ruongDoTBEntry addTB, int removeTB,
+            ArrayList<ruongDoItemEntry> addItem, ArrayList<ruongDoItemEntry> removeItem) throws IOException {
         Message ms;
         DataOutputStream ds;
         if (addTB != null) {
@@ -1038,19 +1061,22 @@ public class User {
         System.out.println("Flush cache in : " + client);
         try {
             // Not online
-            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `online`=0,`idapp`=-1,`lastOnline`='" + Until.toDateString(new Date()) + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
+            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `online`=0,`idapp`=-1,`lastOnline`='"
+                    + Until.toDateString(new Date()) + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
             JSONArray Jarr1 = new JSONArray();
             for (int i = 0; i < this.item.length; i++) {
                 Jarr1.add(item[i]);
             }
-            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `item`='" + Jarr1.toJSONString() + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
+            SQLManager.getStatement().executeUpdate(
+                    "UPDATE `armymem` SET `item`='" + Jarr1.toJSONString() + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
             byte nvXPMax = -1;
             int xpMax = 0;
             for (int i = 0; i < this.lever.length; i++) {
                 if (!this.nvStt[i]) {
                     continue;
                 }
-                ResultSet red = SQLManager.getStatement().executeQuery("SELECT `NV" + (i + 1) + "` FROM `armymem` WHERE `id`=" + this.iddb + " LIMIT 1;");
+                ResultSet red = SQLManager.getStatement().executeQuery(
+                        "SELECT `NV" + (i + 1) + "` FROM `armymem` WHERE `id`=" + this.iddb + " LIMIT 1;");
                 if ((red != null) && (red.first())) {
                     JSONObject nvdata = (JSONObject) JSONValue.parse(red.getString("NV" + (i + 1)));
                     red.close();
@@ -1067,7 +1093,8 @@ public class User {
                         Jarr2.add(this.NvData[i][j]);
                     }
                     nvdata.put("data", Jarr2);
-                    SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `NV" + (i + 1) + "`='" + nvdata.toJSONString() + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
+                    SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `NV" + (i + 1) + "`='"
+                            + nvdata.toJSONString() + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
                     if (this.xp[i] > xpMax) {
                         nvXPMax = (byte) (i + 1);
                         xpMax = this.xp[i];
@@ -1104,7 +1131,8 @@ public class User {
                 tbEntry.put("slot", Jarr4);
                 Jarr1.add(tbEntry);
             }
-            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `ruongTrangBi`='" + Jarr1.toJSONString() + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
+            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `ruongTrangBi`='" + Jarr1.toJSONString()
+                    + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
 
             Jarr1.clear();
             for (ruongDoItemEntry rdiEntry : ruongDoItem) {
@@ -1113,20 +1141,23 @@ public class User {
                 tbEntry.put("numb", rdiEntry.numb);
                 Jarr1.add(tbEntry);
             }
-            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `ruongItem`='" + Jarr1.toJSONString() + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
+            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `ruongItem`='" + Jarr1.toJSONString()
+                    + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
 
             // Mission
             Jarr1.clear();
             for (int i = 0; i < this.mission.length; i++) {
                 Jarr1.add(this.mission[i]);
             }
-            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `mission`='" + Jarr1.toJSONString() + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
+            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `mission`='" + Jarr1.toJSONString()
+                    + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
 
             Jarr1.clear();
             for (int i = 0; i < this.missionLevel.length; i++) {
                 Jarr1.add(this.missionLevel[i]);
             }
-            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `missionLevel`='" + Jarr1.toJSONString() + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
+            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `missionLevel`='" + Jarr1.toJSONString()
+                    + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
 
             int nvstt = 1, pow = 1;
             for (int i = 0; i < this.nvStt.length; i++) {
@@ -1134,9 +1165,11 @@ public class User {
                 pow <<= 1;
             }
             // su kien
-            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `point_event`=" + this.eventScore + ", `baodanhsk` = '" + Until.toDateString(this.baodanhsk) + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
+            // SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `point_event`="
+            // + this.eventScore + ", `baodanhsk` = '" + Until.toDateString(this.baodanhsk)
+            // + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
 
-            //Chuyen Sinh
+            // Chuyen Sinh
             Jarr1.clear();
             for (byte i = 0; i < this.nvCSinh.length; i++) {
                 if (this.nvCSinh[i] == 0) {
@@ -1147,9 +1180,16 @@ public class User {
                 csnv.put("cs", this.nvCSinh[i]);
                 Jarr1.add(csnv);
             }
-            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `nvCSinh`='" + Jarr1.toJSONString() + "', `CSinh` = '" + this.csinh + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
+            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `nvCSinh`='" + Jarr1.toJSONString()
+                    + "', `CSinh` = '" + this.csinh + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
             // Xu, luong, ...
-            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `friends` = '" + this.friends.toJSONString() + "', `xu`='" + this.xu + "',`luong`='" + this.luong + "',`dvong`='" + this.dvong + "',`NVused`='" + (this.nv + 1) + "',`sttnhanvat`='" + nvstt + "',`x2XPTime`='" + Until.toDateString(xpX2Time) + "',`x0XPTime`='" + Until.toDateString(xpX0Time) + "',`point_event` = " + this.eventScore + " ,`nvXPMax`='" + nvXPMax + "',`xpMax`='" + xpMax + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
+            // SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `friends` = '"
+            // + this.friends.toJSONString() + "', `xu`='" + this.xu + "',`luong`='" +
+            // this.luong + "',`dvong`='" + this.dvong + "',`NVused`='" + (this.nv + 1) +
+            // "',`sttnhanvat`='" + nvstt + "',`x2XPTime`='" + Until.toDateString(xpX2Time)
+            // + "',`x0XPTime`='" + Until.toDateString(xpX0Time) + "',`point_event` = " +
+            // this.eventScore + " ,`nvXPMax`='" + nvXPMax + "',`xpMax`='" + xpMax + "'
+            // WHERE `id`=" + this.iddb + " LIMIT 1;");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1281,7 +1321,7 @@ public class User {
                 }
                 updateRuong(null, rdE, rdE2.index, null, arrayI);
                 ds.writeByte(0);
-                ds.writeUTF(GameString.cheDoSuccess());
+                ds.writeUTF(GameString.chedataOutputStreamuccess());
             } else {
                 ds.writeByte(0);
                 ds.writeUTF(GameString.cheDoFail());
@@ -1428,10 +1468,10 @@ public class User {
                     if (rdE.entry.id == 52) {
                         String str = "";
                         updateRuong(null, null, -1, null, hopNgocItemArray);
-                        byte[] arItem1 = new byte[]{62, 63, 64, 65, 66, 67, 68};
-                        byte[] arItem2 = new byte[]{0, 10, 20, 30, 40};
-                        byte[] arItem3 = new byte[]{50, 54};
-                        byte[] arItem4 = new byte[]{89};
+                        byte[] arItem1 = new byte[] { 62, 63, 64, 65, 66, 67, 68 };
+                        byte[] arItem2 = new byte[] { 0, 10, 20, 30, 40 };
+                        byte[] arItem3 = new byte[] { 50, 54 };
+                        byte[] arItem4 = new byte[] { 89 };
                         for (byte i = 0; i < rdE.numb; i++) {
                             switch (Until.nextInt(100)) {
                                 case 0:
@@ -1480,23 +1520,24 @@ public class User {
                                             str = SpecialItemData.getSpecialItemById(iditem).name;
                                             break;
                                         case 1:
-                                            int xuup = new int[]{5000000, 8000000, 10000000}[Until.nextInt(3)];
+                                            int xuup = new int[] { 5000000, 8000000, 10000000 }[Until.nextInt(3)];
                                             this.updateXu(xuup);
                                             str = Until.getStringNumber(xuup) + " xu";
                                             break;
                                         default:
-                                            int xpup = new int[]{5000000, 15000000, 50000000}[Until.nextInt(3)];
+                                            int xpup = new int[] { 5000000, 15000000, 50000000 }[Until.nextInt(3)];
                                             this.updateXP(xpup, false);
                                             str = Until.getStringNumber(xpup) + " xp";
                                             break;
                                     }
                                     ms = new Message(46);
                                     ds = ms.writer();
-                                    ds.writeUTF(this.getUserName().toUpperCase() + " sử dụng Người tuyết cấp 1 nhận được " + str);
+                                    ds.writeUTF(this.getUserName().toUpperCase()
+                                            + " sử dụng Người tuyết cấp 1 nhận được " + str);
                                     ds.flush();
                                     ServerManager.sendToServer(ms);
                                 default:
-                                    int xpup = new int[]{15000, 20000, 30000, 40000, 50000}[Until.nextInt(5)];
+                                    int xpup = new int[] { 15000, 20000, 30000, 40000, 50000 }[Until.nextInt(5)];
                                     this.updateXP(xpup, false);
                                     str = Until.getStringNumber(xpup) + " xp";
                                     break;
@@ -1514,10 +1555,10 @@ public class User {
                     if (rdE.entry.id == 53) {
                         String str = "";
                         updateRuong(null, null, -1, null, hopNgocItemArray);
-                        byte[] arItem1 = new byte[]{62, 63, 64, 65, 66, 67, 68};
-                        byte[] arItem2 = new byte[]{0, 10, 20, 30, 40};
-                        byte[] arItem3 = new byte[]{50, 54};
-                        byte[] arItem4 = new byte[]{89};
+                        byte[] arItem1 = new byte[] { 62, 63, 64, 65, 66, 67, 68 };
+                        byte[] arItem2 = new byte[] { 0, 10, 20, 30, 40 };
+                        byte[] arItem3 = new byte[] { 50, 54 };
+                        byte[] arItem4 = new byte[] { 89 };
                         for (byte i = 0; i < rdE.numb; i++) {
                             switch (Until.nextInt(31)) {
                                 case 0:
@@ -1560,23 +1601,24 @@ public class User {
                                             str = SpecialItemData.getSpecialItemById(iditem).name;
                                             break;
                                         case 1:
-                                            int xuup = new int[]{7000000, 10000000, 10000000}[Until.nextInt(3)];
+                                            int xuup = new int[] { 7000000, 10000000, 10000000 }[Until.nextInt(3)];
                                             this.updateXu(xuup);
                                             str = Until.getStringNumber(xuup) + " xu";
                                             break;
                                         default:
-                                            int xpup = new int[]{7000000, 15000000, 50000000}[Until.nextInt(3)];
+                                            int xpup = new int[] { 7000000, 15000000, 50000000 }[Until.nextInt(3)];
                                             this.updateXP(xpup, false);
                                             str = Until.getStringNumber(xpup) + " xp";
                                             break;
                                     }
                                     ms = new Message(46);
                                     ds = ms.writer();
-                                    ds.writeUTF(this.getUserName().toUpperCase() + " sử dụng Người tuyết cấp 2 nhận được " + str);
+                                    ds.writeUTF(this.getUserName().toUpperCase()
+                                            + " sử dụng Người tuyết cấp 2 nhận được " + str);
                                     ds.flush();
                                     ServerManager.sendToServer(ms);
                                 default:
-                                    int xpup = new int[]{50000, 70000, 90000, 120000, 500000}[Until.nextInt(5)];
+                                    int xpup = new int[] { 50000, 70000, 90000, 120000, 500000 }[Until.nextInt(5)];
                                     this.updateXP(xpup, false);
                                     str = Until.getStringNumber(xpup) + " xp";
                                     break;
@@ -1590,16 +1632,16 @@ public class User {
                         this.sendMessage(ms);
                         return;
                     }
-//                    if (rdE.entry.id == 77 || rdE.entry.id == 78) {
-//                        this.hopNgocAction = 6;
-//                        ms = new Message(17);
-//                        ds = ms.writer();
-//                        ds.writeByte(0);
-//                        ds.writeUTF(GameString.exchangeGift());
-//                        ds.flush();
-//                        sendMessage(ms);
-//                        return;
-//                    }
+                    // if (rdE.entry.id == 77 || rdE.entry.id == 78) {
+                    // this.hopNgocAction = 6;
+                    // ms = new Message(17);
+                    // ds = ms.writer();
+                    // ds.writeByte(0);
+                    // ds.writeUTF(GameString.exchangeGift());
+                    // ds.flush();
+                    // sendMessage(ms);
+                    // return;
+                    // }
                     if (rdE.entry.id == 89) {
                         this.hopNgocAction = 6;
                         ms = new Message(17);
@@ -1720,7 +1762,8 @@ public class User {
                             default:
                                 break;
                         }
-                        ds.writeUTF(String.format(GameString.hopNgocSucess(), rdE1.numb, rdE1.entry.name, rdE2.numb, rdE2.entry.name));
+                        ds.writeUTF(String.format(GameString.hopNgocSucess(), rdE1.numb, rdE1.entry.name, rdE2.numb,
+                                rdE2.entry.name));
                     } else {
                         ds.writeUTF(String.format(GameString.hopNgocFail(), rdE1.numb, rdE1.entry.name));
                     }
@@ -1768,12 +1811,13 @@ public class User {
                         sendMessage(ms);
                     } else if (rdE.entry.id == 77) {
                         if (rdE.numb == 50) {
-                            byte idItem = new byte[]{9, 19, 29, 39, 49}[Until.nextInt(5)];
+                            byte idItem = new byte[] { 9, 19, 29, 39, 49 }[Until.nextInt(5)];
                             this.updateSpecialItem(idItem, 1);
                             updateRuong(null, null, -1, null, hopNgocItemArray);
                             ms = new Message(45);
                             ds = ms.writer();
-                            ds.writeUTF(String.format(GameString.missionComplete(), SpecialItemData.getSpecialItemById(idItem).name));
+                            ds.writeUTF(String.format(GameString.missionComplete(),
+                                    SpecialItemData.getSpecialItemById(idItem).name));
                             ds.flush();
                             sendMessage(ms);
                         } else {
@@ -1823,7 +1867,8 @@ public class User {
                             updateRuong(null, null, -1, null, hopNgocItemArray);
                             ms = new Message(45);
                             ds = ms.writer();
-                            ds.writeUTF(String.format(GameString.missionComplete(), "Bộ trang bị Bạch kim " + rdE2.vipLevel));
+                            ds.writeUTF(String.format(GameString.missionComplete(),
+                                    "Bộ trang bị Bạch kim " + rdE2.vipLevel));
                             ds.flush();
                             sendMessage(ms);
                         } else {
@@ -1989,7 +2034,8 @@ public class User {
 
         }
         try {
-            ResultSet red = SQLManager.getStatement().executeQuery("SELECT `user` FROM `user` WHERE `user_id`='" + this.iddb + "' AND `password`='" + oldpass + "' LIMIT 1;");
+            ResultSet red = SQLManager.getStatement().executeQuery("SELECT `user` FROM `user` WHERE `user_id`='"
+                    + this.iddb + "' AND `password`='" + oldpass + "' LIMIT 1;");
             if (red == null || !red.first()) {
                 ms = new Message(45);
                 ds = ms.writer();
@@ -2000,7 +2046,8 @@ public class User {
                 return;
             }
             red.close();
-            SQLManager.getStatement().executeUpdate("UPDATE `user` SET `password`='" + newpass + "' WHERE `user_id`=" + this.iddb + " LIMIT 1;");
+            SQLManager.getStatement().executeUpdate(
+                    "UPDATE `user` SET `password`='" + newpass + "' WHERE `user_id`=" + this.iddb + " LIMIT 1;");
             ms = new Message(45);
             ds = ms.writer();
             ds.writeUTF(GameString.changPassSuccess());
@@ -2080,24 +2127,24 @@ public class User {
         ds = ms.writer();
         int lucKyNum = Until.nextInt(10);
         for (int i = 0; i < 10; i++) {
-            int type = Until.nextInt(new int[]{300, 150, 450, 100});
+            int type = Until.nextInt(new int[] { 300, 150, 450, 100 });
             byte idItem = 0;
             int numb = 0;
             if (type == 0) {
                 idItem = (byte) Until.nextInt(ItemData.entrys.size());
-                numb = (new int[]{1, 5, 10, 15})[Until.nextInt(new int[]{400, 300, 200, 100})];
+                numb = (new int[] { 1, 5, 10, 15 })[Until.nextInt(new int[] { 400, 300, 200, 100 })];
                 if (i == lucKyNum) {
                     this.updateItem(idItem, numb);
                 }
             }
             if (type == 1) {
-                numb = (new int[]{500, 1000, 5000, 10000})[Until.nextInt(new int[]{400, 300, 200, 100})];
+                numb = (new int[] { 500, 1000, 5000, 10000 })[Until.nextInt(new int[] { 400, 300, 200, 100 })];
                 if (i == lucKyNum) {
                     this.updateXu(numb);
                 }
             }
             if (type == 2) {
-                numb = (new int[]{1, 50, 100, 500})[Until.nextInt(new int[]{400, 300, 200, 100})];
+                numb = (new int[] { 1, 50, 100, 500 })[Until.nextInt(new int[] { 400, 300, 200, 100 })];
                 if (i == lucKyNum) {
                     this.updateXP(numb, true);
                 }
@@ -2631,15 +2678,19 @@ public class User {
             JSONArray jarr = this.friends;
             if (jarr != null) {
                 for (int i = jarr.size() - 1; i >= 0; i--) {
-                    int iddbFR = ((Long) jarr.get(i)).intValue(), nv = 1;
-                    ResultSet red = SQLManager.getStatement().executeQuery("SELECT `user` FROM `user` WHERE user_id=\"" + iddbFR + "\" LIMIT 1;");
+                    Number num = (Number) jarr.get(i);
+                    int iddbFR = num.intValue();
+                    nv = 1;
+                    ResultSet red = SQLManager.getStatement()
+                            .executeQuery("SELECT `user` FROM `user` WHERE user_id=\"" + iddbFR + "\" LIMIT 1;");
                     if (!red.first()) {
                         red.close();
                         continue;
                     }
                     String nameFR = red.getString("user");
                     red.close();
-                    red = SQLManager.getStatement().executeQuery("SELECT `xu`,`NVused`,`clan`,`online` FROM `armymem` WHERE id=\"" + iddbFR + "\" LIMIT 1;");
+                    red = SQLManager.getStatement().executeQuery(
+                            "SELECT `xu`,`NVused`,`clan`,`online` FROM `armymem` WHERE id=\"" + iddbFR + "\" LIMIT 1;");
                     if (!red.first()) {
                         red.close();
                         continue;
@@ -2651,7 +2702,8 @@ public class User {
                     ds.writeShort(red.getShort("clan"));
                     ds.writeByte(red.getByte("online"));
                     red.close();
-                    red = SQLManager.getStatement().executeQuery("SELECT `NV" + nv + "` FROM `armymem` WHERE id=\"" + iddbFR + "\" LIMIT 1;");
+                    red = SQLManager.getStatement()
+                            .executeQuery("SELECT `NV" + nv + "` FROM `armymem` WHERE id=\"" + iddbFR + "\" LIMIT 1;");
                     red.first();
                     JSONObject jobj = (JSONObject) JSONValue.parse(red.getString("NV" + nv));
                     red.close();
@@ -2696,7 +2748,8 @@ public class User {
         ms = new Message(36);
         DataOutputStream ds = ms.writer();
         try {
-            ResultSet red = SQLManager.getStatement().executeQuery("SELECT `user_id`,`user` FROM `user` WHERE user=\"" + user + "\" LIMIT 1;");
+            ResultSet red = SQLManager.getStatement()
+                    .executeQuery("SELECT `user_id`,`user` FROM `user` WHERE user=\"" + user + "\" LIMIT 1;");
             if (red.first()) {
                 ds.writeInt(red.getInt("user_id"));
                 ds.writeUTF(red.getString("user"));
@@ -2843,11 +2896,13 @@ public class User {
             ms = new Message(34);
             DataOutputStream ds = ms.writer();
             ds.writeInt(ids);
-            ResultSet red = SQLManager.getStatement().executeQuery("SELECT `user` FROM `user` WHERE user_id=\"" + ids + "\" LIMIT 1;");
+            ResultSet red = SQLManager.getStatement()
+                    .executeQuery("SELECT `user` FROM `user` WHERE user_id=\"" + ids + "\" LIMIT 1;");
             red.first();
             ds.writeUTF(red.getString("user"));
             red.close();
-            red = SQLManager.getStatement().executeQuery("SELECT `xu`,`luong`,`NVused`,`dvong`,`top` FROM `armymem` WHERE id=\"" + ids + "\" LIMIT 1;");
+            red = SQLManager.getStatement().executeQuery(
+                    "SELECT `xu`,`luong`,`NVused`,`dvong`,`top` FROM `armymem` WHERE id=\"" + ids + "\" LIMIT 1;");
             red.first();
             ds.writeInt(red.getInt("xu"));
             byte nvS = red.getByte("NVUsed");
@@ -2855,7 +2910,8 @@ public class User {
             int dvongS = red.getInt("dvong");
             int top = red.getInt("top");
             red.close();
-            red = SQLManager.getStatement().executeQuery("SELECT `NV" + nvS + "` FROM `armymem` WHERE id=\"" + ids + "\" LIMIT 1;");
+            red = SQLManager.getStatement()
+                    .executeQuery("SELECT `NV" + nvS + "` FROM `armymem` WHERE id=\"" + ids + "\" LIMIT 1;");
             red.first();
             JSONObject jobj = (JSONObject) JSONValue.parse(red.getString("NV" + nvS));
             red.close();
@@ -2902,7 +2958,8 @@ public class User {
 
     public synchronized void updateSpecialItem(int id, int numb) {
         try {
-            if (getNumItemruong(id) + numb > ServerManager.max_ruong_itemslot && getNumItemruong(id) == 0 && this.ruongDoItem.size() >= ServerManager.max_ruong_item) {
+            if (getNumItemruong(id) + numb > ServerManager.max_ruong_itemslot && getNumItemruong(id) == 0
+                    && this.ruongDoItem.size() >= ServerManager.max_ruong_item) {
                 return;
             }
             SpecialItemEntry spE = SpecialItemData.getSpecialItemById(id);
@@ -2960,7 +3017,8 @@ public class User {
                                         case 0:
                                             id = 55;
                                             type = 2;
-                                            int[] nextXu = new int[]{1000, 2000, 5000, 10000, 12000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 100000};
+                                            int[] nextXu = new int[] { 1000, 2000, 5000, 10000, 12000, 15000, 20000,
+                                                    25000, 30000, 40000, 50000, 70000, 100000 };
                                             int xuUp = nextXu[Until.nextInt(nextXu.length)];
                                             name = Until.getStringNumber(xuUp) + " xu";
                                             break;
@@ -2968,7 +3026,7 @@ public class User {
                                         case 1:
                                             id = 56;
                                             type = 2;
-                                            int[] nextXP = new int[]{1000, 10000, 15000, 20000, 25000};
+                                            int[] nextXP = new int[] { 1000, 10000, 15000, 20000, 25000 };
                                             int xpUp = nextXP[Until.nextInt(nextXP.length)];
                                             name = Until.getStringNumber(xpUp) + " xp";
                                             break;
@@ -2987,7 +3045,7 @@ public class User {
 
                                         case 4:
                                             type = 2;
-                                            byte[] aritem = new byte[]{50, 51, 54};
+                                            byte[] aritem = new byte[] { 50, 51, 54 };
                                             id = aritem[Until.nextInt(aritem.length)];
                                             break;
                                     }
@@ -3016,7 +3074,7 @@ public class User {
     protected void giftAfterFight(Message ms) throws IOException {
         DataOutputStream ds;
         byte index = ms.reader().readByte();
-        //hoan thanh
+        // hoan thanh
         if (index == -2) {
             this.startQua = false;
         } else if (index > -1 && !this.dataQua[index]) {
@@ -3036,7 +3094,7 @@ public class User {
                 case 0:
                     id = 55;
                     type = 2;
-                    int[] nextXu = new int[]{1000, 2000, 5000, 10000, 12000, 15000, 20000, 25000, 30000, 40000};
+                    int[] nextXu = new int[] { 1000, 2000, 5000, 10000, 12000, 15000, 20000, 25000, 30000, 40000 };
                     int xuUp = nextXu[Until.nextInt(nextXu.length)];
                     this.updateXu(xuUp);
                     name = Until.getStringNumber(xuUp) + " xu";
@@ -3046,7 +3104,7 @@ public class User {
                 case 2:
                     id = 56;
                     type = 2;
-                    int[] nextXP = new int[]{1000, 10000, 15000, 20000, 25000};
+                    int[] nextXP = new int[] { 1000, 10000, 15000, 20000, 25000 };
                     int xpUp = nextXP[Until.nextInt(nextXP.length)];
                     this.updateXP(xpUp, false);
                     name = Until.getStringNumber(xpUp) + " xp";
@@ -3054,7 +3112,7 @@ public class User {
 
                 case 3:
                     type = 2;
-                    byte[] nextItem = new byte[]{0, 10, 20, 30, 40};
+                    byte[] nextItem = new byte[] { 0, 10, 20, 30, 40 };
                     byte idItem = (byte) (Until.nextInt(5) == 4 ? Until.nextInt(6, 9) : Until.nextInt(6));
                     id = (byte) (idItem + nextItem[Until.nextInt(nextItem.length)]);
                     this.updateSpecialItem(id, 1);
@@ -3072,7 +3130,7 @@ public class User {
                     break;
                 case 7:
                     type = 2;
-                    byte[] aritem = new byte[]{50, 51, 54};
+                    byte[] aritem = new byte[] { 50, 51, 54 };
                     id = aritem[Until.nextInt(aritem.length)];
                     this.updateSpecialItem(id, 1);
                     name = "+1";

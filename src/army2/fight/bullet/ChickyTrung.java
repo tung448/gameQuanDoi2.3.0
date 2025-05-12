@@ -4,17 +4,17 @@ import army2.fight.Bullet;
 import army2.fight.BulletManager;
 import army2.fight.Player;
 
-
 public class ChickyTrung extends Bullet {
 
-    public ChickyTrung(BulletManager bullMNG, byte bullId, int satThuong, Player pl, int X, int Y, int vx, int vy, int msg, int g100) {
-        super(bullMNG, bullId, satThuong, pl, X, Y, vx, vy, msg, g100);
+    public ChickyTrung(BulletManager bulletManager, byte bullId, int satThuong, Player pl, int X, int Y, int vx, int vy,
+            int msg, int g100) {
+        super(bulletManager, bullId, satThuong, pl, X, Y, vx, vy, msg, g100);
     }
 
     @Override
     public void nextXY() {
         if (super.frame == 0) {
-            short[] XYVC = bullMNG.getCollisionPoint(X, Y, X, (short) (Y + 8), isXuyenPlayer, isXuyenMap);
+            short[] XYVC = bulletManager.getCollisionPoint(X, Y, X, (short) (Y + 8), isXuyenPlayer, isXuyenMap);
             if (XYVC != null) {
                 collect = true;
                 X = XYVC[0];

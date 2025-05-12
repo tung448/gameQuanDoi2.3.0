@@ -11,7 +11,6 @@ import network.ISession;
 import network.IMessageHandler;
 import network.Message;
 
-
 public class ClientEntry implements ISession {
 
     private class Sender implements Runnable {
@@ -29,18 +28,18 @@ public class ClientEntry implements ISession {
         @Override
         public void run() {
             try {
-                while (isConnected() && dis != null) {
+                while (isConnected() && dataInputStream != null) {
                     while (sendingMessage != null && sendingMessage.size() > 0) {
                         Message m = sendingMessage.get(0);
                         ServerManager.log("Send mss " + m.getCommand() + " to " + ClientEntry.this.toString());
-                        doSendMessage(m);
+                        dataOutputStreamendMessage(m);
                         sendingMessage.remove(0);
                     }
                     Thread.sleep(10);
                 }
             } catch (Exception e) {
-                System.out.println("Socket is closed!");
-            } 
+                System.out.println("Socket byteArrayIutputStream closed!");
+            }
         }
     }
 
@@ -49,45 +48,49 @@ public class ClientEntry implements ISession {
         @Override
         public void run() {
             try {
-                while(true) {
+                while (true) {
                     Message message = readMessage();
+                    if (message == null)
+                        break;
                     System.out.println(message.toString());
                     System.out.println("get mess not null");
-                    ServerManager.log(ClientEntry.this.toString()+" send mss "+message.getCommand());
+                    ServerManager.log(ClientEntry.this.toString() + " send mss " + message.getCommand());
                     messageHandler.onMessage(message); // thực hiện API
                     message.cleanup();
                 }
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
-            if(isConnected()) {
-                if(messageHandler != null) {
-                    messageHandler.onDisconnected();
+            if (isConnected()) {
+                if (messageHandler != null) {
+                    messageHandler.onDataInputStreamConnected();
                 }
                 close();
             }
         }
 
-        private Message readMessage() throws Exception {
+        private Message readMessage() throws Exception { // read msg from client
             // read message command
-            byte cmd = dis.readByte();
+            if (dataInputStream == null)
+                return null;
+            byte cmd = dataInputStream.readByte();
             if (connected) {
                 cmd = readKey(cmd);
             }
             // read size of data
             int size;
             if (connected) {
-                byte b1 = dis.readByte();
-                byte b2 = dis.readByte();
+                byte b1 = dataInputStream.readByte();
+                byte b2 = dataInputStream.readByte();
                 size = (readKey(b1) & 0xff) << 8 | readKey(b2) & 0xff;
             } else {
-                size = dis.readUnsignedShort();
+                size = dataInputStream.readUnsignedShort();
             }
             byte data[] = new byte[size];
             int len = 0;
             int byteRead = 0;
             while (len != -1 && byteRead < size) {
-                len = dis.read(data, byteRead, size - byteRead);
+                len = dataInputStream.read(data, byteRead, size - byteRead);
                 if (len > 0) {
                     byteRead += len;
                 }
@@ -97,15 +100,14 @@ public class ClientEntry implements ISession {
                     data[i] = readKey(data[i]);
                 }
             }
-            Message msg = new Message(cmd, data);
-            return msg;
+            return new Message(cmd, data);
         }
     }
 
     private static final byte[] key = "bth.army2.ml".getBytes();
     public Socket sc;
-    public DataInputStream dis;
-    public DataOutputStream dos;
+    public DataInputStream dataInputStream;
+    public DataOutputStream dataOutputStream;
     public int id;
     public User user;
     private IMessageHandler messageHandler;
@@ -123,10 +125,10 @@ public class ClientEntry implements ISession {
     public ClientEntry(Socket sc, int id) throws IOException {
         this.sc = sc;
         this.id = id;
-        this.dis = new DataInputStream(sc.getInputStream());
-        this.dos = new DataOutputStream(sc.getOutputStream());
+        this.dataInputStream = new DataInputStream(sc.getInputStream());
+        this.dataOutputStream = new DataOutputStream(sc.getOutputStream());
         setHandler(new MessageHandler(this));
-        sendThread = new Thread(sender = new Sender());
+        sendThread = new Thread(sender = new Sender()); // handsake on start
         collectorThread = new Thread(new MessageCollector());
         collectorThread.start();
     }
@@ -146,29 +148,29 @@ public class ClientEntry implements ISession {
         sender.AddMessage(message);
     }
 
-    protected synchronized void doSendMessage(Message m) throws IOException {
+    protected synchronized void dataOutputStreamendMessage(Message m) throws IOException {
         byte[] data = m.getData();
         try {
             if (connected) {
                 byte b = (writeKey(m.getCommand()));
-                dos.writeByte(b);
+                dataOutputStream.writeByte(b);
             } else {
-                dos.writeByte(m.getCommand());
+                dataOutputStream.writeByte(m.getCommand());
             }
             if (data != null) {
                 int size = data.length;
                 if (m.getCommand() == 90) {
-                    dos.writeInt(size);
-                    dos.write(data);
+                    dataOutputStream.writeInt(size);
+                    dataOutputStream.write(data);
                 } else {
                     if (connected) {
                         int byte1 = writeKey((byte) (size >> 8));
-                        dos.writeByte(byte1);
+                        dataOutputStream.writeByte(byte1);
                         int byte2 = writeKey((byte) (size & 0xFF));
-                        dos.writeByte(byte2);
+                        dataOutputStream.writeByte(byte2);
                         // System.out.println("l1=" + byte1 + " l2=" + byte2 + " k1"+key1+" k2="+key2);
                     } else {
-                        dos.writeShort(size);
+                        dataOutputStream.writeShort(size);
                     }
                     //
                     if (connected) {
@@ -176,14 +178,14 @@ public class ClientEntry implements ISession {
                             data[i] = writeKey(data[i]);
                         }
                     }
-                    dos.write(data);
+                    dataOutputStream.write(data);
                 }
-//                sendByteCount += (5 + data.length);
+                // sendByteCount += (5 + data.length);
             } else {
-                dos.writeShort(0);
-//                sendByteCount += 5;
+                dataOutputStream.writeShort(0);
+                // sendByteCount += 5;
             }
-            dos.flush();
+            dataOutputStream.flush();
             m.cleanup();
         } catch (IOException e) {
             closeMessage();
@@ -213,7 +215,7 @@ public class ClientEntry implements ISession {
             if (user != null) {
                 user.close();
             }
-            ServerManager.disconnect(this);
+            ServerManager.dataInputStreamconnect(this);
             cleanNetwork();
             user = null;
         } catch (IOException e) {
@@ -231,13 +233,13 @@ public class ClientEntry implements ISession {
                 sc.close();
                 sc = null;
             }
-            if (dos != null) {
-                dos.close();
-                dos = null;
+            if (dataOutputStream != null) {
+                dataOutputStream.close();
+                dataOutputStream = null;
             }
-            if (dis != null) {
-                dis.close();
-                dis = null;
+            if (dataInputStream != null) {
+                dataInputStream.close();
+                dataInputStream = null;
             }
             sendThread = null;
             collectorThread = null;
@@ -261,10 +263,10 @@ public class ClientEntry implements ISession {
         DataOutputStream ds = ms.writer();
         ds.writeByte(key.length);
         ds.writeByte(key[0]);
-        for(int i = 1; i < key.length; i++)
-            ds.writeByte(key[i] ^ key[i-1]);
+        for (int i = 1; i < key.length; i++)
+            ds.writeByte(key[i] ^ key[i - 1]);
         ds.flush();
-        doSendMessage(ms);
+        dataOutputStreamendMessage(ms);
         connected = true;
         sendThread.start();
     }
@@ -314,7 +316,7 @@ public class ClientEntry implements ISession {
     public void closeMessage() {
         if (isConnected()) {
             if (messageHandler != null) {
-                messageHandler.onDisconnected();
+                messageHandler.onDataInputStreamConnected();
             }
             close();
         }
@@ -326,59 +328,61 @@ public class ClientEntry implements ISession {
         ds.writeUTF("Vui lòng truy cập http://army2.ml để đăng ký");
         ds.flush();
         this.sendMessage(ms);
-//        try {
-//            String name = ms.reader().readUTF().replaceAll(" ", "").trim();
-//            String pass = ms.reader().readUTF().replaceAll(" ", "");
-//
-//            Pattern p = Pattern.compile("^[a-zA-Z0-9]+$");
-//            Matcher m1 = p.matcher(name);
-//            Matcher m2 = p.matcher(pass);
+        // try {
+        // String name = ms.reader().readUTF().replaceAll(" ", "").trim();
+        // String pass = ms.reader().readUTF().replaceAll(" ", "");
+        //
+        // Pattern p = Pattern.compile("^[a-zA-Z0-9]+$");
+        // Matcher m1 = p.matcher(name);
+        // Matcher m2 = p.matcher(pass);
 
-//            if (!m1.find() || !m2.find()) {
-//                ms = new Message(4);
-//                DataOutputStream ds = ms.writer();
-//                ds.writeUTF(GameString.reg_Error1());
-//                ds.flush();
-//                this.sendMessage(ms);
-//                return;
-//            } else if (name.length() < 5 || name.length() > 16) {
-//                ms = new Message(4);
-//                DataOutputStream ds = ms.writer();
-//                ds.writeUTF(GameString.reg_Error2());
-//                ds.flush();
-//                this.sendMessage(ms);
-//                return;
-//            } else if (pass.length() < 1 || pass.length() > 40) {
-//                ms = new Message(4);
-//                DataOutputStream ds = ms.writer();
-//                ds.writeUTF(GameString.reg_Error3());
-//                ds.flush();
-//                this.sendMessage(ms);
-//                return;    
-//            }
-//            try (ResultSet red = SQLManager.getStatement().executeQuery("SELECT * FROM `user` WHERE user=\"" + name + "\";")) {
-//                if (red.first()) {
-//                    ms = new Message(4);
-//                    DataOutputStream ds = ms.writer();
-//                    ds.writeUTF(GameString.reg_Error4());
-//                    ds.flush();
-//                    this.sendMessage(ms);
-//                } else {
-//                    SQLManager.getStatement().executeUpdate("INSERT INTO user(`user`, `password`) VALUES ('" + name + "', '" + pass + "');");
-//
-//                    ms = new Message(4);
-//                    DataOutputStream ds = ms.writer();
-//                    ds.writeUTF(GameString.reg_Error5());
-//                    ds.flush();
-//                    this.sendMessage(ms);
-//                    System.out.println("regtry True name: "+ name +" pass: "+ pass);
-//                }
-//                red.close();
-//            }
-//        } catch(IOException | SQLException e) {
-//            e.printStackTrace();
-//            System.out.println("regtry False");
-//        }
+        // if (!m1.find() || !m2.find()) {
+        // ms = new Message(4);
+        // DataOutputStream ds = ms.writer();
+        // ds.writeUTF(GameString.reg_Error1());
+        // ds.flush();
+        // this.sendMessage(ms);
+        // return;
+        // } else if (name.length() < 5 || name.length() > 16) {
+        // ms = new Message(4);
+        // DataOutputStream ds = ms.writer();
+        // ds.writeUTF(GameString.reg_Error2());
+        // ds.flush();
+        // this.sendMessage(ms);
+        // return;
+        // } else if (pass.length() < 1 || pass.length() > 40) {
+        // ms = new Message(4);
+        // DataOutputStream ds = ms.writer();
+        // ds.writeUTF(GameString.reg_Error3());
+        // ds.flush();
+        // this.sendMessage(ms);
+        // return;
+        // }
+        // try (ResultSet red = SQLManager.getStatement().executeQuery("SELECT * FROM
+        // `user` WHERE user=\"" + name + "\";")) {
+        // if (red.first()) {
+        // ms = new Message(4);
+        // DataOutputStream ds = ms.writer();
+        // ds.writeUTF(GameString.reg_Error4());
+        // ds.flush();
+        // this.sendMessage(ms);
+        // } else {
+        // SQLManager.getStatement().executeUpdate("INSERT INTO user(`user`, `password`)
+        // VALUES ('" + name + "', '" + pass + "');");
+        //
+        // ms = new Message(4);
+        // DataOutputStream ds = ms.writer();
+        // ds.writeUTF(GameString.reg_Error5());
+        // ds.flush();
+        // this.sendMessage(ms);
+        // System.out.println("regtry True name: "+ name +" pass: "+ pass);
+        // }
+        // red.close();
+        // }
+        // } catch(IOException | SQLException e) {
+        // e.printStackTrace();
+        // System.out.println("regtry False");
+        // }
     }
 
 }

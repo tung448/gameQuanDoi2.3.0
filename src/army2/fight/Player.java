@@ -13,7 +13,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import network.Message;
 
-
 public class Player {
 
     protected FightManager fightMNG;
@@ -129,35 +128,35 @@ public class Player {
         this.satThuong = ability[1] + (teamPoint / 1);
         this.phongThu = ability[2] + (teamPoint * 5);
         this.mayMan = ability[3] + (teamPoint * 5);
-        //5% mm
-        if (this.itemclan[2]) {
-            this.mayMan = this.mayMan * 105 / 100;
-        }
-        //5% dong doi
-        if (this.itemclan[3]) {
-            this.dongDoi = this.dongDoi * 105 / 100;
-        }
-        //5% phong thu
-        if (this.itemclan[4]) {
-            this.phongThu = this.phongThu * 105 / 100;
-        }
-        //5% HP
-        if (this.itemclan[6]) {
-            this.HPMax = this.HPMax * 105 / 100;
-        }
-        //10% mm
-        if (this.itemclan[9]) {
-            this.mayMan = this.mayMan * 110 / 100;
-        }
-        //10% dong doi
-        if (this.itemclan[10]) {
-            this.dongDoi = this.dongDoi * 110 / 100;
-        }
+        // 5% mm
+        // if (this.itemclan[2]) {
+        this.mayMan = this.mayMan * 105 / 100;
+        // }
+        // 5% dong doi
+        // if (this.itemclan[3]) {
+        this.dongDoi = this.dongDoi * 105 / 100;
+        // }
+        // 5% phong thu
+        // if (this.itemclan[4]) {
+        this.phongThu = this.phongThu * 105 / 100;
+        // }
+        // 5% HP
+        // if (this.itemclan[6]) {
+        this.HPMax = this.HPMax * 105 / 100;
+        // }
+        // 10% mm
+        // if (this.itemclan[9]) {
+        this.mayMan = this.mayMan * 110 / 100;
+        // }
+        // 10% dong doi
+        // if (this.itemclan[10]) {
+        this.dongDoi = this.dongDoi * 110 / 100;
+        // }
         this.HP = this.HPMax;
     }
 
     public static int[] getLuyenTapItem() {
-        return new int[]{0, 0, 0, 0, 0, 0, 0, 0};
+        return new int[] { 0, 0, 0, 0, 0, 0, 0, 0 };
     }
 
     public final void setXY(short X, short Y) {
@@ -355,10 +354,12 @@ public class Player {
             tamAH = 250;
         }
         // Neu la tz or apa or chicky or rocket dung pow-> no rong gap doi
-        if (bull.pl.isUsePow && (bull.pl.idNV == 3 || bull.pl.idNV == 4 || bull.pl.idNV == 6 || bull.pl.idNV == 7 || bull.pl.idNV == 8)) {
+        if (bull.pl.isUsePow && (bull.pl.idNV == 3 || bull.pl.idNV == 4 || bull.pl.idNV == 6 || bull.pl.idNV == 7
+                || bull.pl.idNV == 8)) {
             tamAH = tamAH * 2;
         }
-        if (this.isDie || this.voHinhCount > 0 || !Until.intersecRegions(X, Y, width, height, bx, by, tamAH * 2, tamAH * 2)) {
+        if (this.isDie || this.voHinhCount > 0
+                || !Until.intersecRegions(X, Y, width, height, bx, by, tamAH * 2, tamAH * 2)) {
             return;
         }
         if ((bull.bullId == 31 || bull.bullId == 32 || bull.bullId == 35) && this.index >= ServerManager.maxPlayers) {
@@ -386,19 +387,19 @@ public class Player {
             if (bull.typeSC > 0) {
                 switch (bull.typeSC) {
                     case 1:
-                        fightMNG.bullMNG.typeSC = 1;
+                        fightMNG.bulletManager.typeSC = 1;
                         dame = dame * 11 / 10; // x1.1
-                        fightMNG.bullMNG.XSC = bull.XmaxY;
-                        fightMNG.bullMNG.YSC = bull.maxY;
+                        fightMNG.bulletManager.XSC = bull.XmaxY;
+                        fightMNG.bulletManager.YSC = bull.maxY;
                         break;
                     case 2:
-                        fightMNG.bullMNG.typeSC = 1;
+                        fightMNG.bulletManager.typeSC = 1;
                         dame = dame * 6 / 5; // x1.2
-                        fightMNG.bullMNG.XSC = bull.XmaxY;
-                        fightMNG.bullMNG.YSC = bull.maxY;
+                        fightMNG.bulletManager.XSC = bull.XmaxY;
+                        fightMNG.bulletManager.YSC = bull.maxY;
                         break;
                     case 4:
-                        fightMNG.bullMNG.typeSC = 2;
+                        fightMNG.bulletManager.typeSC = 2;
                         dame = dame * 13 / 10; // x1.3
                         break;
                     default:
@@ -435,12 +436,17 @@ public class Player {
                 try {
                     if (this.idNV == 26) {
                         for (int i = 0; i < 2; i++) {
-                            Player players = new Ghost2(fightMNG, (byte) 26, "Ghost II", (byte) (fightMNG.allCount + fightMNG.bullMNG.addboss.size()), 2000 + (fightMNG.getLevelTeam() * 20), (short) (Until.nextInt(100, fightMNG.mapMNG.Width - 100)), (short) Until.nextInt(150));
-                            fightMNG.bullMNG.addboss.add(new AddBoss(players, fightMNG.getisLH() ? 50 : 6));
+                            Player players = new Ghost2(fightMNG, (byte) 26, "Ghost II",
+                                    (byte) (fightMNG.allCount + fightMNG.bulletManager.addboss.size()),
+                                    2000 + (fightMNG.getLevelTeam() * 20),
+                                    (short) (Until.nextInt(100, fightMNG.mapMNG.Width - 100)),
+                                    (short) Until.nextInt(150));
+                            fightMNG.bulletManager.addboss.add(new AddBoss(players, fightMNG.getisLH() ? 50 : 6));
                         }
                     }
                     // Ban dong doi -5xp -5cup
-                    if (this.fightMNG.type != 5 && this.team == bull.pl.team && this.idNV != 23 && this.idNV != 24 && this.index != bull.pl.index) {
+                    if (this.fightMNG.type != 5 && this.team == bull.pl.team && this.idNV != 23 && this.idNV != 24
+                            && this.index != bull.pl.index) {
                         bull.pl.updateCUP(-5);
                         bull.pl.updateEXP(-5);
                         return;
@@ -450,7 +456,7 @@ public class Player {
                     }
                     if (this instanceof Boss) {
 
-                        //kinh nghiệm 
+                        // kinh nghiệm
                         bull.pl.updateEXP(this.XPExist * 100);
 
                     } else {

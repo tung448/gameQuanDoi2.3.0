@@ -17,8 +17,9 @@ import java.io.IOException;
  */
 public class ItemDongBang extends Bullet {
 
-    public ItemDongBang(BulletManager bullMNG, byte bullId, int satThuong, Player pl, int X, int Y, int vx, int vy, int msg, int g100) {
-        super(bullMNG, bullId, satThuong, pl, X, Y, vx, vy, msg, g100);
+    public ItemDongBang(BulletManager bulletManager, byte bullId, int satThuong, Player pl, int X, int Y, int vx,
+            int vy, int msg, int g100) {
+        super(bulletManager, bullId, satThuong, pl, X, Y, vx, vy, msg, g100);
     }
 
     @Override

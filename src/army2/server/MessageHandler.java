@@ -3,7 +3,6 @@ package army2.server;
 import network.Message;
 import network.IMessageHandler;
 
-
 public class MessageHandler implements IMessageHandler {
 
     private final ClientEntry client;
@@ -36,7 +35,7 @@ public class MessageHandler implements IMessageHandler {
                         }
                         break;
 
-                    //gop clan
+                    // gop clan
                     case -21:
                         if (client.user.getState() == User.State.Waiting) {
                             ClanManager.contributeClan(client.user, mss);
@@ -50,7 +49,7 @@ public class MessageHandler implements IMessageHandler {
                         }
                         break;
 
-                    //mo qua
+                    // mo qua
                     case -17:
                         client.user.giftAfterFight(mss);
                         break;
@@ -72,7 +71,7 @@ public class MessageHandler implements IMessageHandler {
                         }
                         break;
 
-                    // Disconnect
+                    // dataInputStreamconnect
                     case -4:
                         client.closeMessage();
                         break;
@@ -410,13 +409,13 @@ public class MessageHandler implements IMessageHandler {
                         }
                         break;
 
-                    //info clan
+                    // info clan
                     case 117:
                         if (client.user.getState() == User.State.Waiting) {
                             ClanManager.getClanInfoMessage(client.user, mss);
                         }
 
-                    //mem ber clan
+                        // mem ber clan
                     case 118:
                         if (client.user.getState() == User.State.Waiting) {
                             ClanManager.getMemberClan(client.user, mss);
@@ -428,7 +427,7 @@ public class MessageHandler implements IMessageHandler {
                         ServerManager.getBigIconMessage(client, mss);
                         break;
 
-                    //Registry
+                    // Registry
                     case 121:
                         client.regMessage(mss);
                         break;
@@ -443,6 +442,7 @@ public class MessageHandler implements IMessageHandler {
                         ServerManager.getMaterialIconMessage(client, mss);
                         break;
                 }
+                Until.log("Finished API : " + mss.getCommand());
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
@@ -454,7 +454,7 @@ public class MessageHandler implements IMessageHandler {
     }
 
     @Override
-    public void onDisconnected() {
+    public void onDataInputStreamConnected() {
     }
 
     @Override

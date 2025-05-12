@@ -12,8 +12,9 @@ public class MGTBulletOld extends Bullet {
 
     private final int force;
 
-    public MGTBulletOld(BulletManager bullMNG, byte bullId, int satThuong, Player pl, int X, int Y, int vx100, int vy100, int force) {
-        super(bullMNG, bullId, satThuong, pl, X, Y, vx100, vy100, 0, 0);
+    public MGTBulletOld(BulletManager bulletManager, byte bullId, int satThuong, Player pl, int X, int Y, int vx100,
+            int vy100, int force) {
+        super(bulletManager, bullId, satThuong, pl, X, Y, vx100, vy100, 0, 0);
         this.force = force;
     }
 
@@ -45,7 +46,7 @@ public class MGTBulletOld extends Bullet {
             }
             vyTemp %= 100;
         }
-        short[] XYVC = bullMNG.getCollisionPoint(preX, preY, (short) X, (short) Y, isXuyenPlayer, isXuyenMap);
+        short[] XYVC = bulletManager.getCollisionPoint(preX, preY, (short) X, (short) Y, isXuyenPlayer, isXuyenMap);
         if (XYVC != null) {
             collect = true;
             X = XYVC[0];

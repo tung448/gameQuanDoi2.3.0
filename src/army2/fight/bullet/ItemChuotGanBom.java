@@ -19,8 +19,9 @@ public class ItemChuotGanBom extends Bullet {
     private final boolean addX;
     private int nYRoi;
 
-    public ItemChuotGanBom(BulletManager bullMNG, byte bullId, int satThuong, Player pl, int X, int Y, byte force, boolean addX) {
-        super(bullMNG, bullId, satThuong, pl, addX ? (X + 1) : (X - 1), Y, 0, 0, 0, 0);
+    public ItemChuotGanBom(BulletManager bulletManager, byte bullId, int satThuong, Player pl, int X, int Y, byte force,
+            boolean addX) {
+        super(bulletManager, bullId, satThuong, pl, addX ? (X + 1) : (X - 1), Y, 0, 0, 0, 0);
         this.nStep = force * 3;
         this.addX = addX;
         this.nYRoi = 0;

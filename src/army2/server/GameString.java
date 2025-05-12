@@ -1,6 +1,5 @@
 package army2.server;
 
-
 public class GameString {
 
     public static GameString gameString = new GameString();
@@ -62,11 +61,11 @@ public class GameString {
     public static String x2XPSuccess() {
         return "Sử dụng thành công. Bạn có 1 ngày xp x2!.";
     }
-    
+
     public static String x0XPSuccess() {
         return "Sử dụng thành công. Bạn sẽ không nhận mọi kinh nghiệm trong 1 ngày!.";
     }
-    
+
     public static String x0XPHuy() {
         return "Sử dụng thành công. Bạn đã hủy không nhận kinh nghiệm!.";
     }
@@ -74,7 +73,7 @@ public class GameString {
     public static String x2XPRequest() {
         return "Bạn có muốn sử dụng item này không? Hiệu lực 1 ngày!.";
     }
-    
+
     public static String x0XPRequest() {
         return "Bạn có muốn không nhận kinh nghiệm không? Hiệu lực 1 ngày!.";
     }
@@ -111,7 +110,7 @@ public class GameString {
         return "Chế ngọc thành công hao phí %d %s thu được %d %s!.";
     }
 
-    public static String cheDoSuccess() {
+    public static String chedataOutputStreamuccess() {
         return "Chế đồ thành công";
     }
 
@@ -150,8 +149,8 @@ public class GameString {
     public static String buySuccess() {
         return "Giao dịch thành công. Xin cảm ơn!.";
     }
-    
-    protected static String addFrienvError1(){
+
+    protected static String addFrienvError1() {
         return "Tên bạn bè cần thêm có chứa kí tự đặc biệt!";
     }
 

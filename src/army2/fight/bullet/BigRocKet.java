@@ -7,14 +7,13 @@ import army2.server.ServerManager;
 import army2.server.Until;
 import java.util.ArrayList;
 
-
 public class BigRocKet extends Bullet {
 
     private short toX;
     private boolean flyshoot;
 
-    public BigRocKet(BulletManager bullMNG, byte bullId, int satThuong, Player pl) {
-        super(bullMNG, bullId, satThuong, pl, pl.X, pl.Y - (pl.height + 12), 0, -50, 0, 0);
+    public BigRocKet(BulletManager bulletManager, byte bullId, int satThuong, Player pl) {
+        super(bulletManager, bullId, satThuong, pl, pl.X, pl.Y - (pl.height + 12), 0, -50, 0, 0);
         super.g100 = 80;
         ArrayList<Short> ar = new ArrayList();
         for (int i = 0; i < ServerManager.maxPlayers; i++) {

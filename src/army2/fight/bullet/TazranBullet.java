@@ -13,8 +13,9 @@ public class TazranBullet extends Bullet {
     protected byte quayLai;
     protected boolean addTZ;
 
-    public TazranBullet(BulletManager bullMNG, byte bullId, int satThuong, Player pl, int X, int Y, int vx, int vy, int msg, int g100) {
-        super(bullMNG, bullId, satThuong, pl, X, Y, vx, vy, msg, g100);
+    public TazranBullet(BulletManager bulletManager, byte bullId, int satThuong, Player pl, int X, int Y, int vx,
+            int vy, int msg, int g100) {
+        super(bulletManager, bullId, satThuong, pl, X, Y, vx, vy, msg, g100);
         this.quayLai = -1;
         this.addTZ = (vx <= 0);
     }

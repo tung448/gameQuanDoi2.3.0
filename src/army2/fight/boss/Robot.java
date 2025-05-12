@@ -8,10 +8,10 @@ import army2.server.Until;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
 public class Robot extends Boss {
 
-    public Robot(FightManager fightMNG, byte idGun, String name, byte location, int HPMax, short X, short Y) throws IOException {
+    public Robot(FightManager fightMNG, byte idGun, String name, byte location, int HPMax, short X, short Y)
+            throws IOException {
         super(fightMNG, idGun, name, location, HPMax, X, Y);
         super.theLuc = 0;
         super.width = 24;
@@ -52,69 +52,81 @@ public class Robot extends Boss {
             short[] FA = null;
             switch (Until.nextInt(9)) {
                 case 0:
-                    FA = fightMNG.getForceArgXY(idNV, fightMNG.bullMNG, true, X, Y, pl.X, pl.Y, (short) (pl.width / 2), (short) (pl.height / 2), 50, 5, 80, 100);
+                    FA = fightMNG.getForceArgXY(idNV, fightMNG.bulletManager, true, X, Y, pl.X, pl.Y,
+                            (short) (pl.width / 2), (short) (pl.height / 2), 50, 5, 80, 100);
                     if (FA == null) {
                         if (!fightMNG.checkWin()) {
                             fightMNG.nextTurn();
                         }
                         return;
                     }
-                    this.fightMNG.newShoot(this.index, (byte) 0, (short) FA[0], (byte) FA[1], (byte) 0, (byte) 1, false);
+                    this.fightMNG.newShoot(this.index, (byte) 0, (short) FA[0], (byte) FA[1], (byte) 0, (byte) 1,
+                            false);
                     break;
                 case 1:
-                    FA = fightMNG.getForceArgXY(idNV, fightMNG.bullMNG, true, X, Y, pl.X, pl.Y, (short) (pl.width / 2), (short) (pl.height / 2), 50, 5, 80, 60);
+                    FA = fightMNG.getForceArgXY(idNV, fightMNG.bulletManager, true, X, Y, pl.X, pl.Y,
+                            (short) (pl.width / 2), (short) (pl.height / 2), 50, 5, 80, 60);
                     if (FA == null) {
                         if (!fightMNG.checkWin()) {
                             fightMNG.nextTurn();
                         }
                         return;
                     }
-                    this.fightMNG.newShoot(this.index, (byte) 2, (short) FA[0], (byte) FA[1], (byte) 0, (byte) 1, false);
+                    this.fightMNG.newShoot(this.index, (byte) 2, (short) FA[0], (byte) FA[1], (byte) 0, (byte) 1,
+                            false);
                     break;
                 case 2:
-                    FA = fightMNG.getForceArgXY(idNV, fightMNG.bullMNG, true, X, Y, pl.X, pl.Y, (short) (pl.width / 2), (short) (pl.height / 2), 50, 5, 50, 80);
+                    FA = fightMNG.getForceArgXY(idNV, fightMNG.bulletManager, true, X, Y, pl.X, pl.Y,
+                            (short) (pl.width / 2), (short) (pl.height / 2), 50, 5, 50, 80);
                     if (FA == null) {
                         if (!fightMNG.checkWin()) {
                             fightMNG.nextTurn();
                         }
                         return;
                     }
-                    this.fightMNG.newShoot(this.index, (byte) 10, (short) FA[0], (byte) FA[1], (byte) 0, (byte) 1, false);
+                    this.fightMNG.newShoot(this.index, (byte) 10, (short) FA[0], (byte) FA[1], (byte) 0, (byte) 1,
+                            false);
                     break;
                 case 3:
                     this.itemUsed = 6;
-                    FA = fightMNG.getForceArgXY(idNV, fightMNG.bullMNG, true, X, Y, pl.X, pl.Y, (short) (pl.width / 2), (short) (pl.height / 2), 50, 5, 70, 90);
+                    FA = fightMNG.getForceArgXY(idNV, fightMNG.bulletManager, true, X, Y, pl.X, pl.Y,
+                            (short) (pl.width / 2), (short) (pl.height / 2), 50, 5, 70, 90);
                     if (FA == null) {
                         if (!fightMNG.checkWin()) {
                             fightMNG.nextTurn();
                         }
                         return;
                     }
-                    this.fightMNG.newShoot(this.index, (byte) 6, (short) FA[0], (byte) FA[1], (byte) 0, (byte) 1, false);
+                    this.fightMNG.newShoot(this.index, (byte) 6, (short) FA[0], (byte) FA[1], (byte) 0, (byte) 1,
+                            false);
                     break;
                 case 4:
                     this.itemUsed = 7;
-                    FA = fightMNG.getForceArgXY(idNV, fightMNG.bullMNG, true, X, Y, pl.X, pl.Y, (short) (pl.width / 2), (short) (pl.height / 2), 50, 5, 70, 80);
+                    FA = fightMNG.getForceArgXY(idNV, fightMNG.bulletManager, true, X, Y, pl.X, pl.Y,
+                            (short) (pl.width / 2), (short) (pl.height / 2), 50, 5, 70, 80);
                     if (FA == null) {
                         if (!fightMNG.checkWin()) {
                             fightMNG.nextTurn();
                         }
                         return;
                     }
-                    this.fightMNG.newShoot(this.index, (byte) 7, (short) FA[0], (byte) FA[1], (byte) 0, (byte) 1, false);
+                    this.fightMNG.newShoot(this.index, (byte) 7, (short) FA[0], (byte) FA[1], (byte) 0, (byte) 1,
+                            false);
                     break;
                 case 5:
                 case 6:
                 case 7:
                 case 8:
-                    FA = fightMNG.getForceArgXY(idNV, fightMNG.bullMNG, true, X, Y, pl.X, pl.Y, pl.width, pl.height, 50, 5, 0, 80);
+                    FA = fightMNG.getForceArgXY(idNV, fightMNG.bulletManager, true, X, Y, pl.X, pl.Y, pl.width,
+                            pl.height, 50, 5, 0, 80);
                     if (FA == null) {
                         if (!fightMNG.checkWin()) {
                             fightMNG.nextTurn();
                         }
                         return;
                     }
-                    this.fightMNG.newShoot(this.index, (byte) 36, (short) FA[0], (byte) FA[1], (byte) 0, (byte) 1, false);
+                    this.fightMNG.newShoot(this.index, (byte) 36, (short) FA[0], (byte) FA[1], (byte) 0, (byte) 1,
+                            false);
                     break;
             }
         } catch (Exception e) {

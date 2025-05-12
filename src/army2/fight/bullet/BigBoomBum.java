@@ -5,11 +5,10 @@ import army2.fight.BulletManager;
 import army2.fight.Player;
 import army2.fight.boss.BigBoom;
 
-
 public class BigBoomBum extends Bullet {
 
-    public BigBoomBum(BulletManager bullMNG, byte bullId, int satThuong, Player pl) {
-        super(bullMNG, bullId, satThuong, pl, pl.X, pl.Y - 12, 0, 0, 0, 0);
+    public BigBoomBum(BulletManager bulletManager, byte bullId, int satThuong, Player pl) {
+        super(bulletManager, bullId, satThuong, pl, pl.X, pl.Y - 12, 0, 0, 0, 0);
     }
 
     @Override

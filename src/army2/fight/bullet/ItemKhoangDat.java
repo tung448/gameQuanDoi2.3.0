@@ -17,8 +17,8 @@ public class ItemKhoangDat extends Bullet {
 
     private final int nFrame;
 
-    public ItemKhoangDat(BulletManager bullMNG, byte bullId, Player pl, int X, int Y, byte force) {
-        super(bullMNG, bullId, 0, pl, X, Y, 0, 0, 0, 0);
+    public ItemKhoangDat(BulletManager bulletManager, byte bullId, Player pl, int X, int Y, byte force) {
+        super(bulletManager, bullId, 0, pl, X, Y, 0, 0, 0, 0);
         this.nFrame = force * 2;
     }
 

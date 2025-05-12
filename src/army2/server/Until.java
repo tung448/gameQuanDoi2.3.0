@@ -314,4 +314,10 @@ public class Until {
         }
     }
 
+    // Tung modify
+    // log
+    public static void log(String msg){
+        System.out.println("[Tung] : " + msg);
+    }
+
 }

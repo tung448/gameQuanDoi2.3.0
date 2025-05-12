@@ -15,8 +15,8 @@ import army2.fight.Player;
  */
 public class ItemTuSat extends Bullet {
 
-    public ItemTuSat(BulletManager bullMNG, byte bullId, int satThuong, Player pl) {
-        super(bullMNG, bullId, satThuong, pl, pl.X, pl.Y - 12, 0, 0, 0, 0);
+    public ItemTuSat(BulletManager bulletManager, byte bullId, int satThuong, Player pl) {
+        super(bulletManager, bullId, satThuong, pl, pl.X, pl.Y - 12, 0, 0, 0, 0);
     }
 
     @Override

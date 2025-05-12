@@ -17,8 +17,9 @@ public class ItemXuyenDat extends Bullet {
 
     private final int force;
 
-    public ItemXuyenDat(BulletManager bullMNG, byte bullId, int satThuong, Player pl, int X, int Y, int vx, int vy, int msg, int g100, int force) {
-        super(bullMNG, bullId, satThuong, pl, X, Y, vx, vy, msg, g100);
+    public ItemXuyenDat(BulletManager bulletManager, byte bullId, int satThuong, Player pl, int X, int Y, int vx,
+            int vy, int msg, int g100, int force) {
+        super(bulletManager, bullId, satThuong, pl, X, Y, vx, vy, msg, g100);
         this.force = force / 2;
         this.isXuyenMap = true;
         this.isXuyenPlayer = false;
@@ -32,7 +33,7 @@ public class ItemXuyenDat extends Bullet {
         lastX = X;
         Y += vy;
         lastY = Y;
-        short[] XYVC = bullMNG.getCollisionPoint(preX, preY, X, Y, isXuyenPlayer, isXuyenMap);
+        short[] XYVC = bulletManager.getCollisionPoint(preX, preY, X, Y, isXuyenPlayer, isXuyenMap);
         if (XYVC != null) {
             collect = true;
             X = XYVC[0];
@@ -63,8 +64,8 @@ public class ItemXuyenDat extends Bullet {
             vy -= vyTemp2 / 100;
             vyTemp2 %= 100;
         }
-        if (this.bullMNG.hasVoiRong) {
-            for (BulletManager.VoiRong vr : this.bullMNG.voiRongs) {
+        if (this.bulletManager.hasVoiRong) {
+            for (BulletManager.VoiRong vr : this.bulletManager.voiRongs) {
                 if (this.X >= vr.X - 5 && this.X <= vr.X + 10) {
                     this.vx -= 2;
                     this.vy -= 2;

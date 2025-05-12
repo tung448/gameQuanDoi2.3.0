@@ -9,25 +9,25 @@ import java.io.IOException;
 public class Message {
 
     private byte command;
-    private ByteArrayOutputStream os;
-    private DataOutputStream dos;
-    private ByteArrayInputStream is;
-    private DataInputStream dis;
+    private ByteArrayOutputStream byteArrayOutputStream;
+    private DataOutputStream dataOutputStream;
+    private ByteArrayInputStream byteArrayIutputStream;
+    private DataInputStream dataInputStream;
 
     public Message(int command) {
         this((byte) command);
     }
 
-    public Message(byte command) {
+    public Message(byte command) { // output
         this.command = command;
-        os = new ByteArrayOutputStream();
-        dos = new DataOutputStream(os);
+        byteArrayOutputStream = new ByteArrayOutputStream();
+        dataOutputStream = new DataOutputStream(byteArrayOutputStream);
     }
 
-    public Message(byte command, byte[] data) {
+    public Message(byte command, byte[] data) { // input
         this.command = command;
-        is = new ByteArrayInputStream(data);
-        dis = new DataInputStream(is);
+        byteArrayIutputStream = new ByteArrayInputStream(data);
+        dataInputStream = new DataInputStream(byteArrayIutputStream);
     }
 
     public byte getCommand() {
@@ -43,26 +43,25 @@ public class Message {
     }
 
     public byte[] getData() {
-        return os.toByteArray();
+        return byteArrayOutputStream.toByteArray();
     }
 
-    public DataInputStream reader() {
-        return dis;
-
+    public DataInputStream reader() { // client send
+        return dataInputStream;
     }
 
     public DataOutputStream writer() {
-        return dos;
+        return dataOutputStream;
     }
 
     public void cleanup() {
         try {
-            if (dis != null) {
-                dis.close();
-            }
-            if (dos != null) {
-                dos.close();
-            }
+            if (dataInputStream != null)
+                dataInputStream.close();
+
+            if (dataOutputStream != null)
+                dataOutputStream.close();
+
         } catch (IOException e) {
         }
     }

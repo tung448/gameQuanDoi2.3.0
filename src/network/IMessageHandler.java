@@ -2,11 +2,11 @@ package network;
 
 public interface IMessageHandler {
 
-    public void onMessage(Message message);
+    public void onMessage(Message message); // thực hiên API
 
     public void onConnectionFail();
 
-    public void onDisconnected();
+    public void onDataInputStreamConnected();
 
     public void onConnectOK();
 

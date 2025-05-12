@@ -44,7 +44,7 @@ public class ServerManager {
     private static boolean debug;
     private static byte n_area;
     protected static String host;
-    protected static short post;
+    protected static short port;
     protected static String mysql_host;
     protected static String mysql_user;
     protected static String mysql_pass;
@@ -86,19 +86,20 @@ public class ServerManager {
     protected static int id;
 
     protected static ArrayList<User> listWait;
-    protected static String[] roomTypes
-            = {"PHÒNG SƠ CẤP", "PHÒNG TRUNG CẤP", "PHÒNG VIP", "PHÒNG ĐẤU TRƯỜNG", "PHÒNG TỰ DO", "PHÒNG ĐẤU TRÙM", "PHÒNG ĐẤU ĐỘI"};
-    protected static String[] roomTypesEng
-            = {"NEWBIE ROOM", "INTERMEDIATE ROOM", "VIP ROOM", "ARENA", "FREEDOM ROOM", "BOSS BATTLE ROOM", "CLAN BATTLE ROOM"};
+    protected static String[] roomTypes = { "PHÒNG SƠ CẤP", "PHÒNG TRUNG CẤP", "PHÒNG VIP", "PHÒNG ĐẤU TRƯỜNG",
+            "PHÒNG TỰ DO", "PHÒNG ĐẤU TRÙM", "PHÒNG ĐẤU ĐỘI" };
+    protected static String[] roomTypesEng = { "NEWBIE ROOM", "INTERMEDIATE ROOM", "VIP ROOM", "ARENA", "FREEDOM ROOM",
+            "BOSS BATTLE ROOM", "CLAN BATTLE ROOM" };
     protected static int[] roomTypeStartNum;
-    protected static String[] nameRooms =    {"Bom", "Nhện máy", "Người máy", "T-rex máy", "UFO", "Khí cầu", "Nhện độc", "Ma", "Trùm liên hoàn", "Trùm liên hoàn"};
-    protected static int[] nameRoomNumbers = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    protected static int[] nameRoomTypes   = {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5};
+    protected static String[] nameRooms = { "Bom", "Nhện máy", "Người máy", "T-rex máy", "UFO", "Khí cầu", "Nhện độc",
+            "Ma", "Trùm liên hoàn", "Trùm liên hoàn" };
+    protected static int[] nameRoomNumbers = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    protected static int[] nameRoomTypes = { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 };
     protected static Room[] rooms;
     public static int startRoomBoss;
     public static int startMapBoss;
     public static int numMapBoss;
-    public static byte[] mapIdBoss = new byte[]{12, 12, 13, 14, 15, 16, 17, 22, 25, 26};
+    public static byte[] mapIdBoss = new byte[] { 12, 12, 13, 14, 15, 16, 17, 22, 25, 26 };
 
     private static void setCache(byte id) {
         try {
@@ -121,7 +122,8 @@ public class ServerManager {
                         ds.writeShort(mapEntry.cl2AddY);
                         ds.writeUTF(mapEntry.name);
                         ds.writeUTF(mapEntry.file);
-                        System.out.println("   - id= " + mapEntry.id + " name= " + mapEntry.name + " file= " + mapEntry.file);
+                        System.out.println(
+                                "   - id= " + mapEntry.id + " name= " + mapEntry.name + " file= " + mapEntry.file);
                     }
                     byte[] ab = bas.toByteArray();
                     Until.saveFile("cache/valuesdata2", ab);
@@ -212,21 +214,22 @@ public class ServerManager {
                     bas2.close();
                     ds2.close();
 
-//                    ByteArrayOutputStream bas2_1 = new ByteArrayOutputStream();
-//                    DataOutputStream ds2_1 = new DataOutputStream(bas2_1);
-//                    int numCaption_1 = CaptionData.entrys_1.size();
-//                    ds2_1.writeByte(numCaption_1);
-//                    System.out.println("Init caption entry numCaption_1= " + numCaption_1);
-//                    for (int i = numCaption_1 - 1; i >= 0; i--) {
-//                        CaptionEntry capEntry_1 = CaptionData.entrys_1.get(i);
-//                        ds2_1.writeUTF(capEntry_1.caption);
-//                        ds2_1.writeByte(capEntry_1.level);
-//                        System.out.println("  lvl= " + capEntry_1.level + " str= " + capEntry_1.caption);
-//                    }
-//                    byte[] ab2_1 = bas2_1.toByteArray();
-//                    Until.saveFile("cache/levelCData2_1", ab2_1);
-//                    bas2_1.close();
-//                    ds2_1.close();
+                    // ByteArrayOutputStream bas2_1 = new ByteArrayOutputStream();
+                    // DataOutputStream ds2_1 = new DataOutputStream(bas2_1);
+                    // int numCaption_1 = CaptionData.entrys_1.size();
+                    // ds2_1.writeByte(numCaption_1);
+                    // System.out.println("Init caption entry numCaption_1= " + numCaption_1);
+                    // for (int i = numCaption_1 - 1; i >= 0; i--) {
+                    // CaptionEntry capEntry_1 = CaptionData.entrys_1.get(i);
+                    // ds2_1.writeUTF(capEntry_1.caption);
+                    // ds2_1.writeByte(capEntry_1.level);
+                    // System.out.println(" lvl= " + capEntry_1.level + " str= " +
+                    // capEntry_1.caption);
+                    // }
+                    // byte[] ab2_1 = bas2_1.toByteArray();
+                    // Until.saveFile("cache/levelCData2_1", ab2_1);
+                    // bas2_1.close();
+                    // ds2_1.close();
                     break;
 
                 case 3:
@@ -284,7 +287,8 @@ public class ServerManager {
         try {
             short ids = ms.reader().readShort();
             short icon = 1;
-            ResultSet red = SQLManager.getStatement().executeQuery("SELECT `icon` FROM `clan` WHERE id = " + ids + " LIMIT 1;");
+            ResultSet red = SQLManager.getStatement()
+                    .executeQuery("SELECT `icon` FROM `clan` WHERE id = " + ids + " LIMIT 1;");
             if (red != null && red.first()) {
                 icon = red.getShort("icon");
             }
@@ -402,10 +406,10 @@ public class ServerManager {
         } else {
             host = "localhost";
         }
-        if (configMap.containsKey("post")) {
-            post = Short.parseShort(configMap.get("post"));
+        if (configMap.containsKey("port")) {
+            port = Short.parseShort(configMap.get("port"));
         } else {
-            post = 8122;
+            port = 8122;
         }
         if (configMap.containsKey("mysql-host")) {
             mysql_host = configMap.get("mysql-host");
@@ -695,10 +699,10 @@ public class ServerManager {
                 for (l = 0; l < 6; l++) {
                     equipEntry.bigImageAlignY[l] = ((Long) jArray3.get(l)).byteValue();
                 }
-//                jArray3 = (JSONArray) JSONValue.parse(res.getString("arraySet"));
-//                for (l = 0; l < 5; l++) {
-//                    equipEntry.arraySet[l] = ((Long) jArray3.get(l)).shortValue();
-//                }
+                // jArray3 = (JSONArray) JSONValue.parse(res.getString("arraySet"));
+                // for (l = 0; l < 5; l++) {
+                // equipEntry.arraySet[l] = ((Long) jArray3.get(l)).shortValue();
+                // }
                 equipEntry.invAdd = new byte[5];
                 equipEntry.percenAdd = new byte[5];
                 jArray3 = (JSONArray) JSONValue.parse(res.getString("addPN"));
@@ -748,17 +752,17 @@ public class ServerManager {
             }
             System.out.println("Load caption level 2 new!");
             res.close();
-//            res = SQLManager.getStatement().executeQuery("SELECT * FROM `captionlv_1`;");
-//            CaptionData.entrys_1 = new ArrayList<>();
-//            while (res.next()) {
-//                CaptionEntry capEntry = new CaptionEntry();
-//                // level
-//                capEntry.level = res.getInt("lvl");
-//                // caption
-//                capEntry.caption = res.getString("caption");
-//                CaptionData.entrys_1.add(capEntry);
-//            }
-//            res.close();
+            // res = SQLManager.getStatement().executeQuery("SELECT * FROM `captionlv_1`;");
+            // CaptionData.entrys_1 = new ArrayList<>();
+            // while (res.next()) {
+            // CaptionEntry capEntry = new CaptionEntry();
+            // // level
+            // capEntry.level = res.getInt("lvl");
+            // // caption
+            // capEntry.caption = res.getString("caption");
+            // CaptionData.entrys_1.add(capEntry);
+            // }
+            // res.close();
         } catch (SQLException e) {
             e.printStackTrace();
             System.exit(0);
@@ -785,28 +789,29 @@ public class ServerManager {
             System.exit(0);
         }
         setCache((byte) 3);
-//        System.out.println("Load Item Clam Data");
-//        try {
-//            res = SQLManager.getStatement().executeQuery("SELECT * FROM `clanshop`;");
-//            System.out.println("load item clan");
-//            ItemClanData.entrys = new ArrayList<>();
-//            while (res.next()) {
-//                ItemClanEntry iEntry = new ItemClanEntry();
-//                iEntry.id = res.getInt("id");
-//                iEntry.level = res.getInt("level");
-//                iEntry.name = res.getString("name");
-//                iEntry.time = res.getShort("time");
-//                iEntry.onsole = res.getByte("onsale");
-//                iEntry.xu = res.getInt("xu");
-//                iEntry.luong = res.getInt("luong");
-//                ItemClanData.entrys.add(iEntry);
-//                System.out.println("id " + iEntry.id + " level " + iEntry.level + " name " + iEntry.name);
-//            }
-//            res.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            System.exit(0);
-//        }
+        // System.out.println("Load Item Clam Data");
+        // try {
+        // res = SQLManager.getStatement().executeQuery("SELECT * FROM `clanshop`;");
+        // System.out.println("load item clan");
+        // ItemClanData.entrys = new ArrayList<>();
+        // while (res.next()) {
+        // ItemClanEntry iEntry = new ItemClanEntry();
+        // iEntry.id = res.getInt("id");
+        // iEntry.level = res.getInt("level");
+        // iEntry.name = res.getString("name");
+        // iEntry.time = res.getShort("time");
+        // iEntry.onsole = res.getByte("onsale");
+        // iEntry.xu = res.getInt("xu");
+        // iEntry.luong = res.getInt("luong");
+        // ItemClanData.entrys.add(iEntry);
+        // System.out.println("id " + iEntry.id + " level " + iEntry.level + " name " +
+        // iEntry.name);
+        // }
+        // res.close();
+        // } catch (SQLException e) {
+        // e.printStackTrace();
+        // System.exit(0);
+        // }
         setCache((byte) 4);
         System.out.println("Load Special Item Data!");
         try {
@@ -956,24 +961,24 @@ public class ServerManager {
     }
 
     protected static void start() {
-        System.out.println("Start socket post=" + post);
+        System.out.println("Start socket port=" + port);
         try {
             clients = new ArrayList<>();
             listWait = new ArrayList<>();
             rooms = new Room[nRoomAll];
             roomTypeStartNum = new int[roomTypes.length];
-            int k = 0;
+            int idRoom = 0;
             for (int i = 0; i < roomTypes.length; i++) {
                 for (int j = 0; j < nRoom[i]; j++) {
                     if (j == 0) {
-                        roomTypeStartNum[i] = k;
+                        roomTypeStartNum[i] = idRoom;
                     }
-                    rooms[k] = new Room(k, i, n_area, j);
-                    k++;
+                    rooms[idRoom] = new Room(idRoom, i, n_area, j);
+                    idRoom++;
                 }
             }
             BangXHManager.init();
-            server = new ServerSocket(post);
+            server = new ServerSocket(port);
             id = 0;
             numClients = 0;
             start = true;
@@ -984,7 +989,7 @@ public class ServerManager {
                     Socket client = server.accept();
                     System.out.println("A client accepted...");
                     ClientEntry cl = new ClientEntry(client, ++id);
-//                    cl.IPAddress = client.getInetAddress().getHostName();
+                    cl.IPAddress = client.getInetAddress().getHostName();
                     clients.add(cl);
                     numClients++;
                     log("Accept socket " + cl + " done!");
@@ -1028,14 +1033,14 @@ public class ServerManager {
         }
     }
 
-    protected static void disconnect(ClientEntry cl) {
+    protected static void dataInputStreamconnect(ClientEntry cl) {
         if (cl.login && (cl.user.getState() == User.State.Waiting)) {
             removeWait(cl.user);
         }
         synchronized (clients) {
             clients.remove(cl);
             numClients--;
-            System.out.println("Disconnect client: " + cl);
+            System.out.println("dataInputStreamconnect client: " + cl);
         }
     }
 
@@ -1270,7 +1275,8 @@ public class ServerManager {
                 ds.writeByte(getc);
                 ds.writeByte(levelCVersion2);
                 if (vers != levelCVersion2) {
-                    byte[] ab = "2.2.3".equals(us.client.versionARM) ? Until.getFile("cache/levelCData2") : Until.getFile("cache/levelCData2_1");
+                    byte[] ab = "2.2.3".equals(us.client.versionARM) ? Until.getFile("cache/levelCData2")
+                            : Until.getFile("cache/levelCData2_1");
                     ds.writeShort(ab.length);
                     ds.write(ab);
                 }
@@ -1341,7 +1347,8 @@ public class ServerManager {
                             int iddb = bxhA1.iddb;
                             ds.writeInt(iddb);
                             ResultSet red;
-                            red = SQLManager.getStatement().executeQuery("SELECT `user` FROM `user` WHERE user_id=\"" + iddb + "\" LIMIT 1;");
+                            red = SQLManager.getStatement()
+                                    .executeQuery("SELECT `user` FROM `user` WHERE user_id=\"" + iddb + "\" LIMIT 1;");
                             red.first();
                             if (type == 0 && bxhA1.index <= 3) {
                                 ds.writeUTF(red.getString("user") + " +" + (4 - bxhA1.index) + "0k xu mỗi ngày");
@@ -1349,13 +1356,17 @@ public class ServerManager {
                                 ds.writeUTF(red.getString("user"));
                             }
                             red.close();
-                            red = SQLManager.getStatement().executeQuery("SELECT `NVused`, `nvXPMax`, `clan` FROM `armymem` WHERE id=\"" + iddb + "\" LIMIT 1;");
+                            red = SQLManager.getStatement()
+                                    .executeQuery("SELECT `NVused`, `nvXPMax`, `clan` FROM `armymem` WHERE id=\"" + iddb
+                                            + "\" LIMIT 1;");
                             red.first();
                             byte nv = 0;
-                            ds.writeByte((type == 1 ? (nv = red.getByte("nvXPMax")) : (nv = red.getByte("NVUsed"))) - 1);
+                            ds.writeByte(
+                                    (type == 1 ? (nv = red.getByte("nvXPMax")) : (nv = red.getByte("NVUsed"))) - 1);
                             ds.writeShort(red.getShort("clan"));
                             red.close();
-                            red = SQLManager.getStatement().executeQuery("SELECT `NV" + nv + "` FROM `armymem` WHERE id=\"" + iddb + "\" LIMIT 1;");
+                            red = SQLManager.getStatement().executeQuery(
+                                    "SELECT `NV" + nv + "` FROM `armymem` WHERE id=\"" + iddb + "\" LIMIT 1;");
                             red.first();
                             JSONObject jobj = (JSONObject) JSONValue.parse(red.getString("NV" + nv));
                             red.close();
@@ -1459,8 +1470,7 @@ public class ServerManager {
         FightWait fo1 = null;
         switch (type) {
             case 5:
-                loop1:
-                for (int i = startRoomBoss; i < startRoomBoss + nRoom[5]; i++) {
+                loop1: for (int i = startRoomBoss; i < startRoomBoss + nRoom[5]; i++) {
                     Room rm = rooms[i];
                     for (FightWait fl1 : rm.entrys) {
                         if (fl1.numPlayer < fl1.maxSetPlayer) {
@@ -1471,8 +1481,7 @@ public class ServerManager {
                 }
                 break;
             case 0:
-                loop2:
-                for (Room rm : rooms) {
+                loop2: for (Room rm : rooms) {
                     for (FightWait fl1 : rm.entrys) {
                         if (fl1.numPlayer == 0) {
                             fo1 = fl1;
@@ -1489,8 +1498,7 @@ public class ServerManager {
                 break;
             default:
                 int nplayer = type * 2;
-                loop3:
-                for (Room rm : rooms) {
+                loop3: for (Room rm : rooms) {
                     for (FightWait fl1 : rm.entrys) {
                         if ((fl1.numPlayer < fl1.maxSetPlayer) && (fl1.maxSetPlayer == nplayer)) {
                             fo1 = fl1;
@@ -1587,19 +1595,16 @@ public class ServerManager {
         int iddb = ms.reader().readInt();
         String s = ms.reader().readUTF();
         // Neu la admin -> bo qua
-        if (iddb == 1) {
-            return;
-        }
         if (s.length() > 100) {
             return;
         }
         // Neu la nguoi dua tin -> send Mss 46-> chat The gioi
         if (iddb == 2) {
             // 10000xu/lan
-            if (us.getXu() < 10000) {
+            if (us.getXu() < 1) {
                 return;
             }
-            us.updateXu(-10000);
+            us.updateXu(10000);
             ms = new Message(46);
             DataOutputStream ds = ms.writer();
             ds.writeUTF(String.format(GameString.mssTGString(), us.getUserName(), s));
@@ -1617,7 +1622,8 @@ public class ServerManager {
     protected static short[] data(int iddb, byte nv) {
         short[] data = new short[5];
         try {
-            ResultSet red = SQLManager.getStatement().executeQuery("SELECT `ruongTrangBi`,NV" + nv + " FROM armymem WHERE id=\"" + iddb + "\" LIMIT 1;");
+            ResultSet red = SQLManager.getStatement()
+                    .executeQuery("SELECT `ruongTrangBi`,NV" + nv + " FROM armymem WHERE id=\"" + iddb + "\" LIMIT 1;");
             red.first();
             JSONObject jobj = (JSONObject) JSONValue.parse(red.getString("NV" + nv));
             JSONArray trangBi = (JSONArray) JSONValue.parse(red.getString("ruongTrangBi"));
@@ -1679,7 +1685,8 @@ public class ServerManager {
             return;
         }
         try {
-            ResultSet red = SQLManager.getStatement().executeQuery("SELECT * FROM `giftcode` WHERE `code` = \"" + code + "\" LIMIT 1;");
+            ResultSet red = SQLManager.getStatement()
+                    .executeQuery("SELECT * FROM `giftcode` WHERE `code` = \"" + code + "\" LIMIT 1;");
             if (!red.first() || !red.getString("code").equals(code)) {
                 ms = new Message(45);
                 DataOutputStream ds = ms.writer();
@@ -1728,7 +1735,8 @@ public class ServerManager {
                 limit--;
             }
             iddblist.add(us.getIDDB());
-            SQLManager.getStatement().executeUpdate("UPDATE `giftcode` SET `limit` = '" + limit + "', `iddblist` = '" + iddblist.toJSONString() + "' WHERE `code`='" + code + "' LIMIT 1;");
+            SQLManager.getStatement().executeUpdate("UPDATE `giftcode` SET `limit` = '" + limit + "', `iddblist` = '"
+                    + iddblist.toJSONString() + "' WHERE `code`='" + code + "' LIMIT 1;");
             DataOutputStream ds;
             ms = new Message(45);
             ds = ms.writer();
