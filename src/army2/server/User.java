@@ -1971,12 +1971,17 @@ public class User {
         }
     }
 
-    protected void selectNVMessage(Message ms) throws IOException {
+    protected void selectNVMessage(Message ms) throws IOException, SQLException {
         byte idnv = ms.reader().readByte();
         if (idnv >= NVData.entrys.size() || idnv < 0 || !this.nvStt[idnv]) {
             return;
         }
         this.nv = idnv;
+        int data = (this.nv + 1);
+
+        SQLManager.getStatement().executeUpdate(
+                "UPDATE `armymem` SET `NVused`='" + data + "' WHERE `Id`=" + this.iddb + " LIMIT 1;");
+
         ms = new Message(69);
         DataOutputStream ds = ms.writer();
         ds.writeInt(this.iddb);
