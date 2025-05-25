@@ -124,6 +124,7 @@ public class User {
         this.hopNgocItemArray = new ArrayList<>();
         this.quas = new ArrayList<>();
         this.moQua = 0;
+        this.xpX0Time = new Date();
     }
 
     public State getState() {
@@ -1187,16 +1188,15 @@ public class User {
                 csnv.put("cs", this.nvCSinh[i]);
                 Jarr1.add(csnv);
             }
-            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `nvCSinh`='" + Jarr1.toJSONString()
-                    + "', `CSinh` = '" + this.csinh + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
+//            SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `nvCSinh`='" + Jarr1.toJSONString()
+//                    + "', `CSinh` = '" + this.csinh + "' WHERE `id`=" + this.iddb + " LIMIT 1;");
             // Xu, luong, ...
-            // SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `friends` = '"
-            // + this.friends.toJSONString() + "', `xu`='" + this.xu + "',`luong`='" +
-            // this.luong + "',`dvong`='" + this.dvong + "',`NVused`='" + (this.nv + 1) +
-            // "',`sttnhanvat`='" + nvstt + "',`x2XPTime`='" + Until.toDateString(xpX2Time)
-            // + "',`x0XPTime`='" + Until.toDateString(xpX0Time) + "',`point_event` = " +
-            // this.eventScore + " ,`nvXPMax`='" + nvXPMax + "',`xpMax`='" + xpMax + "'
-            // WHERE `id`=" + this.iddb + " LIMIT 1;");
+//             SQLManager.getStatement().executeUpdate("UPDATE `armymem` SET `friends` = '"
+//             + this.friends.toJSONString() + "', `xu`='" + this.xu + "',`luong`='" +
+//             this.luong + "',`dvong`='" + this.dvong + "',`NVused`='" + (this.nv + 1) +
+//             "',`sttnhanvat`='" + nvstt + "',`x2XPTime`='" + Until.toDateString(xpX2Time)
+//             + "',`x0XPTime`='" + Until.toDateString(xpX0Time) + "',`point_event` = " +
+//             this.eventScore + " ,`nvXPMax`='" + nvXPMax + "',`xpMax`='" + xpMax + "WHERE `id`=" + this.iddb + " LIMIT 1;");
         } catch (SQLException e) {
             e.printStackTrace();
         }

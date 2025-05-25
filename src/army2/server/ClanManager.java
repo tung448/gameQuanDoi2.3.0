@@ -228,20 +228,28 @@ public class ClanManager {
             ds.writeByte((byte) (xp / level / 500)); // phần trăm lv
             ds.writeUTF(red.getString("desc"));//giới thiệu
             ds.writeUTF(red.getString("dateCreat"));
-            JSONArray itemClan = (JSONArray) JSONValue.parse(red.getString("Item"));
+            String item = red.getString("Item");
+            JSONObject itemClan = (JSONObject) JSONValue.parse(item);
             int lentItem = itemClan.size();
             Date[] itemClanArray = new Date[lentItem];
             boolean[] isItem = new boolean[lentItem];
             int[] idItem = new int[lentItem];
             byte count = 0;
-            for (int i = 0; i < lentItem; i++) {
-                JSONObject jobj = (JSONObject) itemClan.get(i);
-                itemClanArray[i] = Until.getDate(jobj.get("time").toString());
-                idItem[i] = ((Long) jobj.get("id")).intValue();
-                if (itemClanArray[i].after(new Date())) {
-                    isItem[i] = true;
+
+            int index = 0;
+            for (Object keyObj : itemClan.keySet()) {
+                String key = (String) keyObj;
+                String timeStr = (String) itemClan.get(key);
+
+                Date time = Until.getDate(timeStr); // chuyển chuỗi thành Date
+                itemClanArray[index] = time;
+
+                idItem[index] = Integer.parseInt(key);  // key chính là "1", "2", ..., nên dùng làm id
+                if (time.after(new Date())) {
+                    isItem[index] = true;
                     count++;
                 }
+                index++;
             }
             red.close();
             ds.writeByte(count);

@@ -143,6 +143,8 @@ public class Until {
     }
 
     public static Date getDate(String dateString) {
+        if (dateString == null)
+            dateString = Until.toDateString(new Date());
         try {
             return dateFormat.parse(dateString);
         } catch (ParseException e) {

@@ -63,7 +63,7 @@ public class Player {
     protected boolean isMM;
     protected boolean fly;
     protected int XPExist;
-    private boolean[] itemclan = new boolean[ItemClanData.entrys.size() + 1];
+    private boolean[] itemclan = new boolean[ItemClanData.entrys.size() + 1000];
 
     public Player(FightManager fightMNG, byte location, short X, short Y, int item[], int teamPoint, User us) {
         this.fightMNG = fightMNG;
