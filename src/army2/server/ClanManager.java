@@ -276,9 +276,9 @@ public class ClanManager {
         try {
             byte page = ms.reader().readByte();
             short Ids = ms.reader().readShort();
-            ResultSet res = SQLManager.getStatement().executeQuery(String.format("SELECT `Mem` FROM `clan` WHERE `id` = %d;", Ids));
+            ResultSet res = SQLManager.getStatement().executeQuery(String.format("SELECT `mem` FROM `clan` WHERE `id` = %d;", Ids));
             res.first();
-            int mem = res.getInt("Mem");
+            int mem = res.getInt("mem");
             int numPage = (mem % 10 == 0) ? mem / 10 : mem / 10 + 1;
             res.close();
             if (page >= numPage) {
@@ -289,7 +289,8 @@ public class ClanManager {
             ds = ms.writer();
             ds.writeByte(page);
             ds.writeUTF("BIỆT ĐỘI");
-            ResultSet red = SQLManager.getStatement().executeQuery(String.format("SELECT `clanmem`.*, `armymem`.*, `user`.`user` FROM `clanmem` INNER JOIN `armymem` ON `clanmem`.`user` = `armymem`.`id` INNER JOIN `user` ON `clanmem`.`user` = `user`.`user_id` WHERE `clanmem`.`clan` = %d ORDER BY `clanmem`.`rights` DESC, `clanmem`.`xp` DESC LIMIT %d, 10;", Ids, (page * 10)));
+            ResultSet red = SQLManager.getStatement().executeQuery(
+                    String.format("SELECT `clanmem`.*, `armymem`.*, `user`.`user` FROM `clanmem` INNER JOIN `armymem` ON `clanmem`.`user` = `armymem`.`id` INNER JOIN `user` ON `clanmem`.`user` = `user`.`user_id` WHERE `clanmem`.`clan` = %d ORDER BY `clanmem`.`rights` DESC LIMIT %d, 10;", Ids, (page * 10)));
             member = new ArrayList<>();
             int CupClan = 0;
             while (red.next()) {
@@ -297,13 +298,13 @@ public class ClanManager {
                 memberEntry.setName(red.getString("user.user"));
                 memberEntry.setId(red.getInt("armymem.id"));
                 memberEntry.setClan(red.getInt("armymem.clan"));
-                memberEntry.setTimeJoin(red.getDate("clanmem.itemJoin"));
+                memberEntry.setTimeJoin(red.getDate("clanmem.timeJoin"));
                 memberEntry.setXu(red.getInt("clanmem.xu"));
                 memberEntry.setLuong(red.getInt("clanmem.luong"));
                 memberEntry.setCup(red.getInt("armymem.dvong"));
-                memberEntry.setN_contribute(red.getInt("clanmem.n_contribute"));
-                memberEntry.setContribute_time(red.getString("clanmem.contribute_time"));
-                memberEntry.setContribute_text(red.getString("clanmem.contribute_text"));
+//                memberEntry.setN_contribute(red.getInt("clanmem.n_contribute"));
+//                memberEntry.setContribute_time(red.getString("clanmem.contribute_time"));
+//                memberEntry.setContribute_text(red.getString("clanmem.contribute_text"));
                 memberEntry.setRight(red.getByte("clanmem.rights"));
                 memberEntry.setNv((byte) (red.getByte("armymem.NVused") - 1));
                 memberEntry.setOnline(red.getBoolean("armymem.online"));

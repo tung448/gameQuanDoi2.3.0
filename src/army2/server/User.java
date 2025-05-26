@@ -54,7 +54,7 @@ public class User {
         EquipmentEntry entry;
     }
 
-    public static enum State {
+    public enum State {
         Waiting, WaitFight, Fighting
     }
 
@@ -105,6 +105,7 @@ public class User {
     private ArrayList<QuaInfo> quas;
     private byte moQua;
     private boolean dataQua[] = new boolean[12];
+    private int sttnhanvat; // tinh theo bit de bieu dien nhan do mua chua
     private int timeQua;
     public boolean startQua;
     private Thread Gift_finish;
@@ -749,6 +750,7 @@ public class User {
 
                 for (i = 0; i < len; i++) {
                     JSONObject jobj = (JSONObject) JSONValue.parse(red.getString("NV" + (i + 1)));
+                    System.out.println(jobj.toJSONString());
                     /* lever */
                     us.lever[i] = ((Long) jobj.get("lever")).intValue();
                     /* xp % */
@@ -810,10 +812,13 @@ public class User {
                     // Gia luong
                     ds.writeInt(itemEntry.buyLuong);
                 }
-                // Nv stt va gia mua
+                // Nv đã mua va gia mua
                 int nvstt = red.getInt("sttnhanvat");
+                us.sttnhanvat = nvstt;
                 for (i = 0; i < 10; i++) {
-                    us.nvStt[i] = (nvstt & 1) > 0;
+                    us.nvStt[i] = (nvstt & 1) > 0; // true is bought
+                    System.out.println(NVData.entrys.get(i).name);
+                    System.out.println(us.nvStt[i]);
                     if (i > 2) {
                         ds.writeByte(us.nvStt[i] ? 1 : 0);
                         NVEntry nvEntry = NVData.entrys.get(i);
@@ -1992,23 +1997,31 @@ public class User {
         sendTBInfo();
     }
 
-    protected void buyNVMessage(Message ms) throws IOException {
+    protected void buyNVMessage(Message ms) throws IOException, SQLException {
         byte idnv = ms.reader().readByte();
         idnv += 3;
         if (this.nvStt[idnv]) {
             return;
         }
+
+        int sstUpdate = 1 << idnv;
+        this.sttnhanvat += sstUpdate;
         NVEntry nventry = NVData.entrys.get(idnv);
+
         byte buyLuong = ms.reader().readByte();
         boolean buyOK = false;
         if (buyLuong == 1) {
             if (this.luong >= nventry.buyLuong && nventry.buyLuong >= 0) {
                 this.updateLuong(-nventry.buyLuong);
+                SQLManager.getStatement().executeUpdate(
+                        "UPDATE `armymem` SET `sttnhanvat`='" + this.sttnhanvat + "' WHERE `Id`=" + this.iddb + " LIMIT 1;");
                 buyOK = true;
             }
         } else {
             if (this.xu >= nventry.buyXu && nventry.buyXu >= 0) {
                 this.updateXu(-nventry.buyXu);
+                SQLManager.getStatement().executeUpdate(
+                        "UPDATE `armymem` SET `sttnhanvat`='" + this.sttnhanvat + "' WHERE `Id`=" + this.iddb + " LIMIT 1;");
                 buyOK = true;
             }
         }
